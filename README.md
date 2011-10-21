@@ -14,6 +14,7 @@ max(a, b) min(a, b)
 
 String
 #
+isEmpty()
 toInteger()
 endsWith(str)
 pluralize() capitalize()
@@ -22,6 +23,7 @@ chop()
 
 Array
 #
+isEmpty()
 contains(x)
 equals(x)
 random()

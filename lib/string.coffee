@@ -24,3 +24,5 @@ String.prototype.reverse = ->
 
   return s
 
+String.prototype.isEmpty = ->
+  @length == 0
