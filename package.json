@@ -1,0 +1,29 @@
+{
+  "name": "tagen",
+  "summary": "An extension to JavaScript",
+  "description": "An extension to JavaScript",
+  "homepage": "http://github.com/GutenYe/tagenjs",
+  "author": "Guten",
+  "version": "0.0.1",
+  "directories": {
+    "lib": "lib"
+  },
+  "bpm:build": {
+    "bpm_libs.js": {
+      "files": [
+        "lib"
+      ]
+    },
+    "tagen/bpm_tests.js": {
+      "files": [
+        "spec"
+      ]
+    }
+  },
+  "dependencies": {
+    "spade": ">= 0"
+  },
+  "dependencies:development": {
+    "spade-jasmine": ">= 0"
+  }
+}

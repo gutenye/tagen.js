@@ -1,0 +1,5 @@
+require './window'
+require './number'
+require './string'
+require './array'
+require './math'
