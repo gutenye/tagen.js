@@ -7,45 +7,51 @@ tagenjs, an extension to JavaScript
 API
 ------
 
-```
-Number
-.
-max(a, b) min(a, b)
+	Number
+	.
+	max(a, b) min(a, b)
 
-String
-#
-isEmpty()
-toInteger()
-endsWith(str)
-pluralize() capitalize()
-reverse()
-chop()
+	String
+	#
+	isEmpty()
+	toInteger()
+	endsWith(str)
+	pluralize() capitalize()
+	reverse()
+	chop()
 
-Array
-#
-isEmpty()
-contains(x)
-equals(x)
-random()
+	Array
+	#
+	isEmpty()
+	contains(x)
+	equals(x)
+	random()
 
-Math
-.
-mod(val, mod)
+	Math
+	.
+	mod(val, mod)
 
-window
-.
-pd()
-getInnerWidth() getInnerHeight()
+	window
+	.
+	pd()
+	getInnerWidth() getInnerHeight()
 
-...
-```
+	...
 
 see source code.
 
 INSTALL
 -------
 
-`$ bpm add tagen` 
+with bpm
+
+	$ bpm add tagen
+
+with rails 3.1
+
+	$ gem install tagenjs
+	# app/assets/javascripts/application.js
+		//= require 'tagenjs'
 
 Resources
 ---------

@@ -1,0 +1,1 @@
+../../../../assets/bpm_libs.js
