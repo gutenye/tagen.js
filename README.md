@@ -7,7 +7,7 @@ tagenjs, an extension to JavaScript
 API
 ------
 
-`
+```
 Number
 .
 max(a, b) min(a, b)
@@ -38,7 +38,7 @@ pd()
 getInnerWidth() getInnerHeight()
 
 ...
-`
+```
 
 see source code.
 
