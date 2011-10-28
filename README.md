@@ -1,6 +1,8 @@
 tagenjs, an extension to JavaScript
 ===================================
 
+compability: IE9 FF4 Webkit # use Object.definePrototype. 
+
 * Design in Ruby syntax with Javascript Name Convention.
 * Best used with CoffeeScript. 
 
