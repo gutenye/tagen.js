@@ -22,5 +22,8 @@
   },
   "dependencies:development": {
     "jasmine": ">= 0.pre"
+  },
+  "dependencies": {
+    "pd": ">= 0"
   }
 }

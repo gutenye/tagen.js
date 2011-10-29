@@ -1,3 +1,5 @@
+Tagen.mixin Object, Enumerable
+
 Tagen.reopen Object,
   reopen: (attrs)->
     Tagen.reopen(this, attrs)
@@ -8,26 +10,36 @@ Tagen.reopen Object,
 
     return if results && results.length > 1 then results[1] else ''
 
-  # 1.isInstanceOf(Number) => true
-  isInstanceOf: (constructorClass)->
+  # callback(k, v, self)
+  each: (iterator)->
+    for own k, v of this
+      iterator(k, v, this)
+
+  # 1.instanceOf(Number) => true
+  instanceOf: (constructorClass)->
     return @constructor == constructorClass
 
-  isNull:  ->
+  isObject: ->
+    return this == new Object(this)
+
+  isNull: ->
     return this == null
 
   isUndefined: ->
     return this == undefined
 
-  # Array, String
   # Object: has no enumerable own-properties.
   isEmpty: ->
-    switch @constructorName() 
-      when 'Array', 'String'
-        return @length == 0
-      when 'Object'
-        for k in this
-          return false if hasOwnProperty.call(this, k)
-        return true
-      else
-        throw "not support type. -- #{@constructorName()}"
-        ###
+    for own k, v of this
+      return false
+
+  hasKey: (key)->
+    for own k of this
+      return true if k == key
+    return false
+
+  hasValue: (value)->
+    for own k, v of this
+      return true if v == value
+    return false
+

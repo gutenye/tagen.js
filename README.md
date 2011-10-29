@@ -1,6 +1,8 @@
 tagenjs, an extension to JavaScript
 ===================================
 
+use underscore.
+
 compability: IE9 FF4 Webkit # use Object.definePrototype. 
 
 * Design in Ruby syntax with Javascript Name Convention.

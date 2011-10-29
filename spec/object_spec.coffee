@@ -7,33 +7,33 @@ describe 'Object', ->
 
       expect(a.b).toEqual 1
 
-  describe '#isInstanceOf', ->
+  describe '#instanceOf', ->
     it 'Boolean', ->
-      expect(true.isInstanceOf(Boolean)).toBeTruthy()
-      expect(false.isInstanceOf(Boolean)).toBeTruthy()
+      expect(true.instanceOf(Boolean)).toBeTruthy()
+      expect(false.instanceOf(Boolean)).toBeTruthy()
     it 'Number', ->
-      expect(1.isInstanceOf(Number)).toBeTruthy()
-      expect(1.0.isInstanceOf(Number)).toBeTruthy()
+      expect(1.instanceOf(Number)).toBeTruthy()
+      expect(1.0.instanceOf(Number)).toBeTruthy()
     it 'String', ->
-      expect('x'.isInstanceOf(String)).toBeTruthy()
+      expect('x'.instanceOf(String)).toBeTruthy()
     it 'Array', ->
-      expect([].isInstanceOf(Array)).toBeTruthy()
+      expect([].instanceOf(Array)).toBeTruthy()
     it 'Object', ->
-      expect({}.isInstanceOf(Object)).toBeTruthy()
+      expect({}.instanceOf(Object)).toBeTruthy()
     it 'Function', ->
-      expect((->).isInstanceOf(Function)).toBeTruthy()
+      expect((->).instanceOf(Function)).toBeTruthy()
     it 'Date', ->
-      expect((new Date()).isInstanceOf(Date)).toBeTruthy()
+      expect((new Date()).instanceOf(Date)).toBeTruthy()
     it 'RegExp', ->
-      expect(//.isInstanceOf(RegExp)).toBeTruthy()
+      expect(//.instanceOf(RegExp)).toBeTruthy()
     #it 'Arguments', ->
-      #expect(1.isInstanceOf('Arguments')).toBeTruthy()
+      #expect(1.instanceOf('Arguments')).toBeTruthy()
     #it 'Element', ->
-      #expect(1.isInstanceOf('Element')).toBeTruthy()
+      #expect(1.instanceOf('Element')).toBeTruthy()
     it 'coffescript Class', ->
       class Guten
         # pass
-      expect((new Guten).isInstanceOf(Guten)).toBeTruthy()
+      expect((new Guten).instanceOf(Guten)).toBeTruthy()
 
   describe '(R) constructorName', ->
     it 'Boolean', ->
