@@ -25,13 +25,18 @@ Tagen.reopen = Tagen.mixin = (object, attrs) ->
   for own k, v of attrs
     Object.defineProperty(object, k, value: v)
 
-
 # reopenClass a Class
 Tagen.reopenClass = (klass, attrs) ->
   for k, v of attrs
     continue if attrs.hasOwnProperty(k)
     klass[k] = v
 
+# Extend a given object with all the properties in passed-in object(s).
+Tagen.extend = (obj, args...) ->
+  args.each (source) ->
+    for prop of source
+      obj[prop] = source[prop]
+  return obj
 
 # Generate a unique integer id (unique within the entire client session).
 idCounter = 0
@@ -44,6 +49,24 @@ Tagen.uniqueId = (prefix) ->
 Tagen.escape = (string) ->
   (''+string).replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;')
 
+# Generate an integer Array containing an arithmetic progression. A port of
+# the native Python `range()` function. See
+# [the Python documentation](http://docs.python.org/library/functions.html#range).
+Tagen.range = (start, stop, step) ->
+  if (arguments.length <= 1) 
+    stop = start || 0
+    start = 0
+  step = arguments[2] || 1
+
+  len = Math.max(Math.ceil((stop - start) / step), 0)
+  idx = 0
+  range = new Array(len)
+
+  while (idx < len) 
+    range[idx++] = start
+    start += step
+
+  return range
 
 # Perform a deep comparison to check if two objects are equal.
 Tagen.isEqual = (a, b) ->
@@ -120,3 +143,5 @@ eq = (a, b, stack) ->
   # Remove the first object from the stack of traversed objects.
   stack.pop()
   return result
+
+

@@ -19,9 +19,6 @@ Tagen.reopen Object,
   instanceOf: (constructorClass)->
     return @constructor == constructorClass
 
-  isObject: ->
-    return this == new Object(this)
-
   isNull: ->
     return this == null
 
@@ -43,3 +40,33 @@ Tagen.reopen Object,
       return true if v == value
     return false
 
+
+
+  # Invokes interceptor with the obj, and then returns obj.
+  # The primary purpose of this method is to "tap into" a method chain, in
+  # order to perform operations on intermediate results within the chain.
+  tap: (interceptor) ->
+    interceptor(this)
+    return this
+
+  # Create a (shallow-cloned) duplicate of an object.
+  clone: () ->
+    @extend({}, this)
+
+  # Return a sorted list of the function names available on the object.
+  methods: () ->
+    names = []
+    for key of obj
+      names.push(key) if obj[key].instanceOf(Function)
+    return names.sort()
+
+  # ONLY Object
+  keys: () -> 
+    keys = []
+    for own key of this
+      keys.push key
+    return keys
+
+  # ONLY Object
+  values: ()->
+    @map (k,v)-> v

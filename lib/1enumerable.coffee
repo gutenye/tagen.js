@@ -47,7 +47,7 @@ root.Enumerable = Enumerable =
     ret = null
     @any (args...) ->
       if iterator(args...)
-        ret = if @isObject() then [args[0], args[1]] else args[0]
+        ret = if @instanceOf(Object) then [args[0], args[1]] else args[0]
         return true
     return ret
 
@@ -55,7 +55,7 @@ root.Enumerable = Enumerable =
     ret = []
     @each (args...) ->
       if iterator(args...)
-        value = if @isObject() then [args[0], args[1]] else args[0]
+        value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
         ret.push value
     return ret
 
@@ -65,7 +65,7 @@ root.Enumerable = Enumerable =
     ret = []
     @each (args...) ->
       if !iterator(args...)
-        value = if @isObject() then [args[0], args[1]] else args[0]
+        value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
         ret.push value
     return ret
 
@@ -167,6 +167,17 @@ root.Enumerable = Enumerable =
     )
 
     ret.pluck('value')
+
+  # Groups the object's values by a criterion. Pass either a string attribute
+  # to group by, or a function that returns the criterion.
+  groupBy: (iterator) ->
+    ret = {}
+    @each (args...) ->
+      key = iterator(args)
+      value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
+      (ret[key] || (ret[key] = [])).push(value)
+    return ret
+
 
 Enumerable.collect = Enumerable.map
 Enumerable.detect = Enumerable.find

@@ -26,10 +26,6 @@ describe 'Object', ->
       expect((new Date()).instanceOf(Date)).toBeTruthy()
     it 'RegExp', ->
       expect(//.instanceOf(RegExp)).toBeTruthy()
-    #it 'Arguments', ->
-      #expect(1.instanceOf('Arguments')).toBeTruthy()
-    #it 'Element', ->
-      #expect(1.instanceOf('Element')).toBeTruthy()
     it 'coffescript Class', ->
       class Guten
         # pass
