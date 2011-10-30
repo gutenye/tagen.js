@@ -1,11 +1,13 @@
-tagenjs, an extension to JavaScript
+tagenjs, Javascript in Ruby way
 ===================================
-
-use underscore.
 
 compability: IE9 FF4 Webkit # use Object.definePrototype. 
 
-* Design in Ruby syntax with Javascript Name Convention.
+Features
+--------
+
+* Ruby compability. e.g. `Enumerable`, `Enumerator`, `each`, `map` ... # write codeing between Ruby and Javascript
+* Javascript Name Convention. e.g. `#empty?` -> `isEmpty`, `find_all` -> `FindAll`
 * Best used with CoffeeScript. 
 
 API
