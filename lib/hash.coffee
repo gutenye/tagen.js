@@ -1,4 +1,5 @@
 class Hash extends Object
+  # convert Object to Hash
   @_: (attrs)->
     new Hash(attrs)
 
@@ -33,12 +34,4 @@ class Hash extends Object
   toString: ->
     @attrs
 
-h = Hash._(a:1)
-
-
-#window.Hash = Hash
-
-
-
-
-
+root['Hash'] = Hash

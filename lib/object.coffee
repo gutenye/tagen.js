@@ -1,8 +1,11 @@
 Tagen.mixin Object, Enumerable
 
+# Object's method don't for null, undefined object
+
 Tagen.reopen Object,
   reopen: (attrs)->
-    Tagen.reopen(this, attrs)
+    for own k, v of attrs
+      Object.defineProperty(this, k, value: v)
 
   # http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
   constructorName: ->
@@ -10,37 +13,18 @@ Tagen.reopen Object,
 
     return if results && results.length > 1 then results[1] else ''
 
-  # callback(k, v, self)
-  each: (iterator)->
-    for own k, v of this
-      iterator(k, v, this)
-
   # 1.instanceOf(Number) => true
   instanceOf: (constructorClass)->
-    return @constructor == constructorClass
+    @constructor == constructorClass
 
-  isNull: ->
-    return this == null
+  isNaN: ->
+    this != this
 
-  isUndefined: ->
-    return this == undefined
-
-  # Object: has no enumerable own-properties.
+  # ONLY Object
+  # has no enumerable own-properties.
   isEmpty: ->
     for own k, v of this
       return false
-
-  hasKey: (key)->
-    for own k of this
-      return true if k == key
-    return false
-
-  hasValue: (value)->
-    for own k, v of this
-      return true if v == value
-    return false
-
-
 
   # Invokes interceptor with the obj, and then returns obj.
   # The primary purpose of this method is to "tap into" a method chain, in
@@ -51,14 +35,26 @@ Tagen.reopen Object,
 
   # Create a (shallow-cloned) duplicate of an object.
   clone: () ->
-    @extend({}, this)
+    ret = {}
+    for prop of this
+      ret[prop] = this[prop]
+    ret
 
   # Return a sorted list of the function names available on the object.
   methods: () ->
     names = []
-    for key of obj
-      names.push(key) if obj[key].instanceOf(Function)
+    for k, v of this
+      names.push(k) if v.instanceOf(Function)
     return names.sort()
+
+  # ONLY Object
+  # callback(k, v, self)
+  each: (iterator)->
+    try
+      for own k, v of this
+        iterator(k, v, this)
+    catch err
+      throw err if err != BREAKER
 
   # ONLY Object
   keys: () -> 
@@ -70,3 +66,16 @@ Tagen.reopen Object,
   # ONLY Object
   values: ()->
     @map (k,v)-> v
+
+  # ONLY Object
+  hasKey: (key)->
+    for own k of this
+      return true if k == key
+    return false
+
+  # ONLY Object
+  hasValue: (value)->
+    for own k, v of this
+      return true if v == value
+    return false
+

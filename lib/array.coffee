@@ -10,40 +10,44 @@ Array.toArray = (iterable) ->
 Tagen.mixin Array, Enumerable
 
 Tagen.reopen Array,
-  # callback(key, i, self)
+  # each() => <#Enumerator>
+  # each(iterator) => 
+  #
+  # support break by `throw BREAKER`
+  #
+  # callback(value, index, self)
   each: (iterator) ->
-    @forEach(iterator)
+    return new Enumerator(this) unless iterator
 
-  equals: (arr) ->
-    return false if this.length != arr.length
-    for i in [0...this.length]
-      if this[i].equals  #likely nested array
-        if !this[i].equals(arr[i]) 
-          return false 
-        else 
-          continue
-      return false if this[i] != arr[i]
+    try
+      for v, i in this
+        iterator(v, i, this)
+    catch err
+      throw err if err != BREAKER
+
+  isEqual: (ary) ->
+    return false if @length != ary.length
+    for v, i in this
+      if v.instanceOf(Array) 
+        return v.isEqual(ary[i]) 
+      else
+        return false if v != ary[i]
     return true
 
+  # alias contains
   isInclude: (obj) ->
     @indexOf(obj) != -1
-
-  random: ->
-    i = Math.random()*@length
-    this[Math.floor(i)]
 
   isEmpty: ->
     @length == 0
 
-  each: (iterator, context)->
-    if @forEach
-      @forEach(iterator, context)
-    else
-      for i in this
-        return if i in obj && iterator.call(context, obj[i], i, obj) == {}
-
+  # shadow-clone
   clone: ()->
     @slice()
+
+  random: ->
+    i = Math.random() * @length
+    this[Math.floor(i)]
 
   # Zip together multiple lists into a single array -- elements that share
   # an index go together.
@@ -56,62 +60,96 @@ Tagen.reopen Array,
     return ret
 
   # Get the first element of an array. Passing **n** will return the first N
-  # values in the array. Aliased as `head`. The **guard** check allows it to work
-  # with `_.map`.
-  first: (n, guard) -> 
-    (n != null) && if !guard then slice.call(this, 0, n) else this[0]
+  # values in the array
+  #
+  # first() => value
+  # first(n) => Array
+  first: (n) ->
+    if n then @slice(0, n) else this[0]
 
   # Get the last element of an array. Passing **n** will return the last N
-  # values in the array. The **guard** check allows it to work with `_.map`.
-  last: (n, guard)  ->
-    (n != null) && if !guard then slice.call(this, @length - n) else this[@length - 1]
+  # values in the array
+  #
+  # last() => value
+  # last(n) => Array
+  last: (n)  ->
+    if n then @slice(@length-n) else this[@length-1]
 
-  # Trim out all falsy values from an array.
+  # Trim out all null values from an array.
   compact: () ->
-    @filter (value) -> !!value
+    @findAll (value) -> 
+      value != null
 
   # Return a completely flattened version of an array.
+  #
+  # flatten(shallow=false)
   flatten: (shallow) -> 
-    @reduce( (memo, value) ->
-      return memo.concat(if shallow then value else value.flatten()) if (value.instanceOf(Array)) 
-      memo[memo.length] = value
-      return memo
-    , [])
+    ret = []
+    @each (v) ->
+      if v.instanceOf(Array)
+        v = if shallow then v else v.flatten()
+        ret = ret.concat v
+      else
+        ret.push v
+
+    ret
 
   # Produce a duplicate-free version of the array. If the array has already
   # been sorted, you have the option of using a faster algorithm.
-  uniq: (isSorted, iterator) ->
-    initial = iterator ? @map(iterator) : this
-    result = []
-    @reduce(initial, (memo, el, i) ->
-      if 0 == i || (if isSorted === true then memo.last() != el else !memo.isInclude(el)) 
-        memo[memo.length] = el
-        result[result.length] = this[i]
+  #
+  # uniq(isSorted=false)
+  uniq: (isSorted) ->
+    ret = []
 
-      return memo
-    , [])
-    return result
+    @each (v, i) ->
+      if 0 == i || (if isSorted == true then ret.last() != v else !ret.isInclude(v)) 
+        ret.push v
+      ret
 
-  # Produce an array that contains the union: each distinct element from all of
-  # the passed-in arrays.
-  union: () ->
-    arguments.flatten(true).uniq()
-
-  # Produce an array that contains every item shared between all the
-  # passed-in arrays. (Aliased as "intersect" for back-compat.)
-  intersection: (args...) ->
-    @uniq().filter (item) ->
-      args.every (other) ->
-        other.indexOf(item) >= 0
-
-  # Take the difference between one array and another.
-  # Only the elements present in just the first array will remain.
-  difference: (other) ->
-    @filter (value) -> !_.isInclude(other, value)
+    return ret
 
   # Return a version of the array that does not contain the specified value(s).
   without: (args...) ->
-    @difference(args...)
+    @findAll (value) -> !args.isInclude(value)
+
+  # data like [ {a: 1}, {a: 2} .. ]
+  #
+  pluck: (key) ->
+    @map (data) ->
+      data[key]
+
+  # findIndex(value)
+  # findIndex(fn[v]=>bool)
+  #
+  # => -1
+  findIndex: (obj) ->
+    switch obj.constructorName()
+      when 'Function'
+        iterator = obj
+      else
+        iterator = (v)->
+          v == obj
+
+    ret = -1
+    @each (v, i, self)->
+      if iterator(v, i, self)
+        ret = i
+        throw BREAKER
+
+    ret
+
+  # Invoke a method (with arguments) on every item in a collection.
+  # => null if no method
+  invoke: (methodName, args...) ->
+    @map (value) ->
+      method = value[methodName]
+      if method 
+        method.apply(value, args...)
+      else
+        null
+
+# alias
+Array::contains = Array::isInclude
 
 # If the browser doesn't supply us with indexOf (I'm looking at you, **MSIE**),
 # we need this function. Return the position of the first occurrence of an
@@ -137,5 +175,5 @@ unless Array::lastIndexOf
     return -1 if (this == null) 
     i = @length
     while (i--) 
-      return i if (this[i] === item) 
+      return i if (this[i] == item) 
     return -1

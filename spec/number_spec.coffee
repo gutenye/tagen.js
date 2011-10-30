@@ -8,3 +8,12 @@ describe 'Number', ->
     it 'get the minium value', ->
       expect(Number.min(1, 2)).toEqual(1)
       expect(Number.min(2, 1)).toEqual(1)
+
+  describe '#times', ->
+    it 'works', ->
+      a = []
+      b = [0, 1, 2]
+      (3).times (i) ->
+        a.push i
+
+      expect(a).toEqual b

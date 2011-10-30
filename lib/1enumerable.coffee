@@ -1,26 +1,28 @@
-root.Enumerable = Enumerable = 
+Enumerable =
   # any?
   any: (iterator)->
     ret = false
     @each (args...)->
       if ret |= iterator(args...)
         return true
-    return !!result
+    return !!ret
 
   # all?
   all: (iterator)->
     ret = true
     @each (args...)->
-      if !(ret = ret && iterator(args...)) 
-        return false 
+      if !iterator(args...)
+        ret = false 
+        throw BREAKER
     return ret
 
   # none?
   none: (iterator)-> 
     ret = true
     @each (args...)->
-      if ret = ret && iterator(args...)
-        return false 
+      if iterator(args...)
+        ret = false
+        throw BREAKER
     return ret
 
   # one?
@@ -29,7 +31,7 @@ root.Enumerable = Enumerable =
     @each (args...)->
       if iterator(args...)
         counts += 1
-        return false if counts == 2
+        throw BREAKER if counts == 2
     return if counts == 1 then true else false
 
   map: (iterator) ->
@@ -38,32 +40,27 @@ root.Enumerable = Enumerable =
       ret.push iterator(args...)
     ret
 
-  # ONLY Array
-  pluck: (key) ->
-    @map (value) ->
-      value[key]
-
   find: (iterator) ->
     ret = null
-    @any (args...) ->
+    @each (args...) =>
       if iterator(args...)
         ret = if @instanceOf(Object) then [args[0], args[1]] else args[0]
-        return true
+        throw BREAKER
     return ret
 
   findAll: (iterator) ->
     ret = []
-    @each (args...) ->
+    @each (args...) =>
       if iterator(args...)
         value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
         ret.push value
     return ret
 
-
   # Return all the elements for which a truth test fails.
+  # opsite of findAll.
   reject: (iterator) ->
     ret = []
-    @each (args...) ->
+    @each (args...) =>
       if !iterator(args...)
         value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
         ret.push value
@@ -74,73 +71,50 @@ root.Enumerable = Enumerable =
   #
   #  callback{|memo, args...| => memo}
   #
-  inject: (margs...)->
-    switch margs.length
+  # ONLY Array-like
+  #
+  inject: (args...) ->
+    switch args.length
       when 1
         initial = null
-        iterator = margs[0]
+        iterator = args[0]
       when 2
-        initial = margs[0]
-        iterator = margs[1]
+        initial = args[0]
+        iterator = args[1]
       else
         throw 'wrong argument'
 
     memo = initial
-    @each obj, (value, args...)->
+    @each (args...) ->
       if initial == null
-        memo = value
+        memo = args[0]
         initial = true
       else
         memo = iterator(memo, args...)
 
     memo
 
-
-  # Invoke a method (with arguments) on every item in a collection.
-  # only in Array
-  invoke: (method, args...) ->
-    @map (args2...) ->
-      value = args2[0]
-      method = if method.call then method || value else value[method]
-      method.apply(value, args...)
-
-
   # Return the maximum element or (element-based computation).
+  # ruby: max
   # max()
   # max(iterator)
   #
-  # ONLY for Array
+  # ONLY for Array-like
   #
   # => null, value
-  max: (iterator) ->
-    if !iterator
-      if @isEmpty() 
-        return null
-      else if @instanceOf(Array)
-        return Math.max.apply(Math, this)
-
-    ret = {value: null, computed: -Infinity}
-    @each (args...)->
-      value = args[0]
-      computed = if iterator then iterator(args...) else value
-      computed >= ret.computed && (ret = {value: value, computed: computed})
-    return ret.value
+  max: () ->
+    if @isEmpty() 
+      return null
+    else if @instanceOf(Array)
+      return Math.max.apply(Math, this)
 
   # Return the minimum element (or element-based computation).
+  # see max
   min: (iterator) ->
-    if !iterator
-      if @isEmpty()
-        return null
-      else if @instanceOf(Array)
-        return Math.max.apply(Math, this)
-
-    ret = {value: null, computed: Infinity}
-    @each (args...) ->
-      value = args[0]
-      computed = if iterator then iterator(args...) else value
-      computed < ret.computed && (ret = {value : value, computed : computed})
-    return ret.value
-
+    if @isEmpty()
+      return null
+    else if @instanceOf(Array)
+      return Math.min.apply(Math, this)
 
   # Shuffle an array.
   # only in Array ?
@@ -154,7 +128,6 @@ root.Enumerable = Enumerable =
         shuffled[index] = shuffled[rand]
         shuffled[rand] = value
     return shuffled
-
 
   # Sort the object's values by a criterion produced by an iterator.
   # ONLY Array
@@ -172,12 +145,12 @@ root.Enumerable = Enumerable =
   # to group by, or a function that returns the criterion.
   groupBy: (iterator) ->
     ret = {}
-    @each (args...) ->
-      key = iterator(args)
+    @each (args...) =>
+      key = iterator(args...)
       value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
-      (ret[key] || (ret[key] = [])).push(value)
+      (ret[key] ?= []).push(value)
     return ret
 
-
+root['Enumerable'] = Enumerable
 Enumerable.collect = Enumerable.map
 Enumerable.detect = Enumerable.find

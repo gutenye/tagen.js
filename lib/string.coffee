@@ -11,16 +11,14 @@ Tagen.reopen String,
   chop: ->
     if @length == 0 then  "" else @substring(0, @length-1)
 
-
   endsWith: (str) ->
     @length-str.length == @lastIndexOf(str)
 
-
   reverse: ->
     s = ""
-    i = this.length
+    i = @length
     while i > 0 
-      s += this.substring(i-1, i)
+      s += @substring(i-1, i)
       i--
 
     s

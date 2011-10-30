@@ -1,72 +1,46 @@
 Tagen = {}
 Tagen.VERSION = '0.0.1'
+BREAKER = new Error('BREAKER')
 root = this.root = this
 
-
-if exports?
-  exports.Tagen = Tagen 
-  exports.pd = pd
-else
-  root['Tagen'] = Tagen
-  root['pd'] = pd
+if exports? then exports.Tagen = Tagen else root['Tagen'] = Tagen
+if global? then global.BREAKER = BREAKER else root['BREAKER'] = BREAKER
 
 ##
 ## Util function
 ##
 
+# reopenClass(Class, attrs)
+Tagen.reopenClass = (klass, attrs) ->
+  for own k, v of attrs
+    klass[k] = v
 
-# reopen a Class or a <#Object>
-#
-# use Object.defineProperty
-#
+# reopen(Class, attrs)
+# reopen(object, attrs)
+# alias mixin
 Tagen.reopen = Tagen.mixin = (object, attrs) ->
   object = object.prototype if object.prototype
 
   for own k, v of attrs
     Object.defineProperty(object, k, value: v)
 
-# reopenClass a Class
-Tagen.reopenClass = (klass, attrs) ->
-  for k, v of attrs
-    continue if attrs.hasOwnProperty(k)
-    klass[k] = v
-
-# Extend a given object with all the properties in passed-in object(s).
-Tagen.extend = (obj, args...) ->
-  args.each (source) ->
-    for prop of source
-      obj[prop] = source[prop]
-  return obj
+Tagen.try = (obj, method, args...) ->
+  return null if obj == null
+  return obj[method].call(obj, args...) if obj[method]
+  return null
 
 # Generate a unique integer id (unique within the entire client session).
 idCounter = 0
+# uniqueId([prefix])
+# @return [String]
 Tagen.uniqueId = (prefix) ->
   id = idCounter++
-  if prefix then "#{prefix}#{id}" : "#{id}"
-
+  if prefix then "#{prefix}#{id}" else "#{id}"
 
 # Escape a string for HTML interpolation.
-Tagen.escape = (string) ->
-  (''+string).replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;')
-
-# Generate an integer Array containing an arithmetic progression. A port of
-# the native Python `range()` function. See
-# [the Python documentation](http://docs.python.org/library/functions.html#range).
-Tagen.range = (start, stop, step) ->
-  if (arguments.length <= 1) 
-    stop = start || 0
-    start = 0
-  step = arguments[2] || 1
-
-  len = Math.max(Math.ceil((stop - start) / step), 0)
-  idx = 0
-  range = new Array(len)
-
-  while (idx < len) 
-    range[idx++] = start
-    start += step
-
-  return range
+Tagen.escape = (str) ->
+  str = str.toString()
+  str.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;')
 
 # Perform a deep comparison to check if two objects are equal.
 Tagen.isEqual = (a, b) ->
@@ -80,8 +54,8 @@ eq = (a, b, stack) ->
   # A strict comparison is necessary because `null == undefined`.
   return a == b if (a == null) || (b == null)
   # Invoke a custom `isEqual` method if one is provided.
-  return a.isEqual(b) if a.isEqual.instanceOf(Function)
-  return b.isEqual(a) if b.isEqual.instanceOf(Function)
+  return a.isEqual(b) if a.isEqual && a.isEqual.instanceOf(Function)
+  return b.isEqual(a) if b.isEqual && b.isEqual.instanceOf(Function)
   # Compare object types.
   typeA = typeof a
   return false if (typeA != typeof b)
@@ -114,9 +88,9 @@ eq = (a, b, stack) ->
   # Ensure that both values are objects.
   return false if (typeA != 'object')
   # Arrays or Arraylikes with different lengths are not equal.
-  return false if (a.length !== b.length)
+  return false if (a.length != b.length)
   # Objects with different constructors are not equal.
-  return false if (a.constructor !== b.constructor)
+  return false if (a.constructor != b.constructor)
   # Assume equality for cyclic structures. The algorithm for detecting cyclic
   # structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
   length = stack.length
@@ -143,5 +117,3 @@ eq = (a, b, stack) ->
   # Remove the first object from the stack of traversed objects.
   stack.pop()
   return result
-
-

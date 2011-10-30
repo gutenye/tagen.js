@@ -19,3 +19,8 @@ describe 'String', ->
   describe '#reverse', ->
     it 'reverse a string', ->
       expect('car'.reverse()).toEqual 'rac'
+
+  describe '#isEmpty', ->
+    it 'works', ->
+      expect(''.isEmpty()).toBeTruthy()
+      expect('x'.isEmpty()).toBeFalsy()
