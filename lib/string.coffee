@@ -1,4 +1,4 @@
-Tagen.reopen String,
+_.reopen String,
   toInteger: ->
     parseInt(this)
 

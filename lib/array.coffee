@@ -7,9 +7,9 @@ Array.toArray = (iterable) ->
   return slice.call(iterable) if (_.isArguments(iterable))  
   return _.values(iterable)
 
-Tagen.mixin Array, Enumerable
+_.mixin Array, Enumerable
 
-Tagen.reopen Array,
+_.reopen Array,
   # each() => <#Enumerator>
   # each(iterator) => 
   #
@@ -28,7 +28,7 @@ Tagen.reopen Array,
   isEqual: (ary) ->
     return false if @length != ary.length
     for v, i in this
-      if v.instanceOf(Array) 
+      if _(v).instanceOf(Array) 
         return v.isEqual(ary[i]) 
       else
         return false if v != ary[i]
@@ -86,7 +86,7 @@ Tagen.reopen Array,
   flatten: (shallow) -> 
     ret = []
     @each (v) ->
-      if v.instanceOf(Array)
+      if _(v).instanceOf(Array)
         v = if shallow then v else v.flatten()
         ret = ret.concat v
       else
@@ -123,7 +123,7 @@ Tagen.reopen Array,
   #
   # => -1
   findIndex: (obj) ->
-    switch obj.constructorName()
+    switch _(obj).constructorName()
       when 'Function'
         iterator = obj
       else
@@ -148,17 +148,13 @@ Tagen.reopen Array,
       else
         null
 
-# alias
-Array::contains = Array::isInclude
-
-# If the browser doesn't supply us with indexOf (I'm looking at you, **MSIE**),
-# we need this function. Return the position of the first occurrence of an
-# item in an array, or -1 if the item is not included in the array.
-# Delegates to **ECMAScript 5**'s native `indexOf` if available.
-# If the array is large and already in sort order, pass `true`
-# for **isSorted** to use binary search.
-unless Array::indexOf
-  Array::indexOf = (item, isSorted) ->
+  # If the browser doesn't supply us with indexOf (I'm looking at you, **MSIE**),
+  # we need this function. Return the position of the first occurrence of an
+  # item in an array, or -1 if the item is not included in the array.
+  # Delegates to **ECMAScript 5**'s native `indexOf` if available.
+  # If the array is large and already in sort order, pass `true`
+  # for **isSorted** to use binary search.
+  indexOf: Array::indexOf || (item, isSorted) ->
     return -1 if (this == null) 
 
     if isSorted
@@ -169,11 +165,13 @@ unless Array::indexOf
       return i if (k == item)
     return -1
 
-# Delegates to **ECMAScript 5**'s native `lastIndexOf` if available.
-unless Array::lastIndexOf
-  Array::lastIndexOf = (item) ->
+  # Delegates to **ECMAScript 5**'s native `lastIndexOf` if available.
+  lastIndexOf: Array::lastIndexOf || (item) ->
     return -1 if (this == null) 
     i = @length
     while (i--) 
       return i if (this[i] == item) 
     return -1
+
+# alias
+Array::contains = Array::isInclude

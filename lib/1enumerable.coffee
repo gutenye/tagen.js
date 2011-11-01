@@ -36,7 +36,7 @@ Enumerable =
 
   map: (iterator) ->
     ret = []
-    @each (args...) -> 
+    @each (args...) => 
       ret.push iterator(args...)
     ret
 
@@ -44,7 +44,7 @@ Enumerable =
     ret = null
     @each (args...) =>
       if iterator(args...)
-        ret = if @instanceOf(Object) then [args[0], args[1]] else args[0]
+        ret = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
         throw BREAKER
     return ret
 
@@ -52,7 +52,7 @@ Enumerable =
     ret = []
     @each (args...) =>
       if iterator(args...)
-        value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
+        value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
         ret.push value
     return ret
 
@@ -62,7 +62,7 @@ Enumerable =
     ret = []
     @each (args...) =>
       if !iterator(args...)
-        value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
+        value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
         ret.push value
     return ret
 
@@ -105,7 +105,7 @@ Enumerable =
   max: () ->
     if @isEmpty() 
       return null
-    else if @instanceOf(Array)
+    else if _(@).instanceOf(Array)
       return Math.max.apply(Math, this)
 
   # Return the minimum element (or element-based computation).
@@ -113,7 +113,7 @@ Enumerable =
   min: (iterator) ->
     if @isEmpty()
       return null
-    else if @instanceOf(Array)
+    else if _(@).instanceOf(Array)
       return Math.min.apply(Math, this)
 
   # Shuffle an array.
@@ -143,12 +143,13 @@ Enumerable =
 
   # Groups the object's values by a criterion. Pass either a string attribute
   # to group by, or a function that returns the criterion.
+  # @return [Hash]
   groupBy: (iterator) ->
-    ret = {}
+    ret = H()
     @each (args...) =>
       key = iterator(args...)
-      value = if @instanceOf(Object) then [args[0], args[1]] else args[0]
-      (ret[key] ?= []).push(value)
+      value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
+      ret.fetch_or_store(key, []).push(value)
     return ret
 
 root['Enumerable'] = Enumerable

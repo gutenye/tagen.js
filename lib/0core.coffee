@@ -1,30 +1,36 @@
-Tagen = {}
-Tagen.VERSION = '0.0.1'
+_ = (obj) -> new Wrapper(obj)
+_.VERSION = '0.0.1'
 BREAKER = new Error('BREAKER')
 root = this.root = this
 
-if exports? then exports.Tagen = Tagen else root['Tagen'] = Tagen
-if global? then global.BREAKER = BREAKER else root['BREAKER'] = BREAKER
+if exports? then exports = _ else root['_'] = _
+if global? then global['BREAKER'] = BREAKER else root['BREAKER'] = BREAKER
 
 ##
 ## Util function
 ##
 
 # reopenClass(Class, attrs)
-Tagen.reopenClass = (klass, attrs) ->
+_.reopenClass = (klass, attrs, overwrite) ->
   for own k, v of attrs
-    klass[k] = v
+    unless klass[k]
+      Object.defineProperty(klass, k, value: v, writable: true)
 
-# reopen(Class, attrs)
-# reopen(object, attrs)
+# reopen(Class, attrs, overwrite=false)
+# @overwrite. false use native method if possible.
+#
+# see Object#reopen
+#
 # alias mixin
-Tagen.reopen = Tagen.mixin = (object, attrs) ->
-  object = object.prototype if object.prototype
-
+_.reopen = _.mixin = (klass, attrs, overwrite) ->
+  target = klass.prototype
   for own k, v of attrs
-    Object.defineProperty(object, k, value: v)
+    if target[k] && !overwrite
+      # pass
+    else
+      target[k] = v
 
-Tagen.try = (obj, method, args...) ->
+_.try = (obj, method, args...) ->
   return null if obj == null
   return obj[method].call(obj, args...) if obj[method]
   return null
@@ -33,17 +39,17 @@ Tagen.try = (obj, method, args...) ->
 idCounter = 0
 # uniqueId([prefix])
 # @return [String]
-Tagen.uniqueId = (prefix) ->
+_.uniqueId = (prefix) ->
   id = idCounter++
   if prefix then "#{prefix}#{id}" else "#{id}"
 
 # Escape a string for HTML interpolation.
-Tagen.escape = (str) ->
+_.escape = (str) ->
   str = str.toString()
   str.replace(/&(?!\w+;|#\d+;|#x[\da-f]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g,'&#x2F;')
 
 # Perform a deep comparison to check if two objects are equal.
-Tagen.isEqual = (a, b) ->
+_.isEqual = (a, b) ->
   eq(a, b, [])
 
 # Internal recursive comparison function.
@@ -54,29 +60,29 @@ eq = (a, b, stack) ->
   # A strict comparison is necessary because `null == undefined`.
   return a == b if (a == null) || (b == null)
   # Invoke a custom `isEqual` method if one is provided.
-  return a.isEqual(b) if a.isEqual && a.isEqual.instanceOf(Function)
-  return b.isEqual(a) if b.isEqual && b.isEqual.instanceOf(Function)
+  return a.isEqual(b) if a.isEqual && _(a.isEqual).instanceOf(Function)
+  return b.isEqual(a) if b.isEqual && _(b.isEqual).instanceOf(Function)
   # Compare object types.
   typeA = typeof a
   return false if (typeA != typeof b)
   # Optimization; ensure that both values are truthy or falsy.
   return false if (!a != !b)
   # `NaN` values are equal.
-  return b.isNaN() if a.isNaN()
+  return _(b).isNaN() if _(a).isNaN()
   # Compare string objects by value.
-  [ isStringA, isStringB ] = [ a.instanceOf(String), b.instanceOf(String) ]
+  [ isStringA, isStringB ] = [ _(a).instanceOf(String), _(b).instanceOf(String) ]
   return isStringA && isStringB && String(a) == String(b) if (isStringA || isStringB) 
   # Compare number objects by value.
-  [ isNumberA, isNumberB ] = [ a.instanceOf(Number), b.instanceOf(Number) ]
+  [ isNumberA, isNumberB ] = [ _(a).instanceOf(Number), _(b).instanceOf(Number) ]
   return isNumberA && isNumberB && +a == +b if (isNumberA || isNumberB) 
   # Compare boolean objects by value. The value of `true` is 1; the value of `false` is 0.
-  [ isBooleanA, isBooleanB ] = [ a.instanceOf(Boolean), b.instanceOf(Boolean) ]
+  [ isBooleanA, isBooleanB ] = [ _(a).instanceOf(Boolean), _(b).instanceOf(Boolean) ]
   return isBooleanA && isBooleanB && +a == +b if (isBooleanA || isBooleanB) 
   # Compare dates by their millisecond values.
-  [ isDateA, isDateB ] = [ a.instanceOf(Date), b.instanceOf(Date) ]
+  [ isDateA, isDateB ] = [ _(a).instanceOf(Date), _(b).instanceOf(Date) ]
   return isDateA && isDateB && a.getTime() == b.getTime() if (isDateA || isDateB) 
   # Compare RegExps by their source patterns and flags.
-  [ isRegExpA, isRegExpB ] = [ a.instanceOf(RegExp), b.instanceOf(RegExp) ]
+  [ isRegExpA, isRegExpB ] = [ _(a).instanceOf(RegExp), _(b).instanceOf(RegExp) ]
   if (isRegExpA || isRegExpB) 
     # Ensure commutative equality for RegExps.
     return isRegExpA && isRegExpB &&
@@ -117,3 +123,56 @@ eq = (a, b, stack) ->
   # Remove the first object from the stack of traversed objects.
   stack.pop()
   return result
+
+
+class Wrapper
+  constructor: (obj) ->
+    @object = obj
+   
+  reopen: (attrs) ->
+    for own k, v of attrs
+      @object[k] = v
+
+  # http://stackoverflow.com/questions/332422/how-do-i-get-the-name-of-an-objects-type-in-javascript
+  constructorName: ->
+    if Object::toString.call(@object) == '[object Arguments]'
+      'Arguments'
+    else
+      results = @object.constructor.toString().match(/function (.{1,})\(/)
+      if results && results.length > 1 then results[1] else ''
+
+  # 1.instanceOf(Number) => true
+  #
+  # arguments.instanceOf('Arguments') => true # arguments is special
+  instanceOf: (constructorClass)->
+    if constructorClass == 'Arguments' &&  Object::toString.call(@object) == '[object Arguments]'
+      true
+    else
+      @object.constructor == constructorClass
+
+  isNaN: ->
+    @object != @object
+
+  # Invokes interceptor with the obj, and then returns obj.
+  # The primary purpose of this method is to "tap into" a method chain, in
+  # order to perform operations on intermediate results within the chain.
+  tap: (interceptor) ->
+    interceptor(@object)
+    return this
+
+  # Create a (shallow-cloned) duplicate of an object.
+  clone: () ->
+    ret = {}
+    for prop of @object
+      ret[prop] = @object[prop]
+    ret
+
+  # Return a sorted list of the function names available on the object.
+  methods: () ->
+    names = []
+    for k, v of @object
+      names.push(k) if _(v).instanceOf(Function)
+    return names.sort()
+
+# Expose `wrapper.prototype` as `_.prototype`
+_.prototype = Wrapper.prototype

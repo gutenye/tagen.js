@@ -1,11 +1,11 @@
-Tagen.reopenClass Number,
+_.reopenClass Number,
   max: (a, b) -> 
     if a < b then b else a
 
   min: (a, b)  ->
     if a > b then b else a
 
-Tagen.reopen Number,
+_.reopen Number,
   # (3).times (i)->
   #   # ..
   #

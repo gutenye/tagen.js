@@ -2,7 +2,7 @@ describe 'Enumerable', ->
   # array
   _a = [1, 2]
   # object
-  _b = {a: 1, b: 2}
+  _b = H(a: 1, b: 2)
 
   describe '#any', ->
     it 'any one is true => true', ->
@@ -63,17 +63,14 @@ describe 'Enumerable', ->
       expect(ret).toBeFalsy()
 
   describe '#map', ->
-    it 'modify each value and return a new Array', ->
+    it 'use native', ->
       a = [ 1, 2 ]
       b = [ '1', '2' ]
 
-      ret = _a.map (v) ->
+      ret = a.map (v) ->
         v.toString()
 
       expect(ret).toEqual b
-
-    it 'alias as collect', ->
-      expect(Array::collect).toBe Array::map
 
 
   describe '#find', ->
@@ -88,14 +85,11 @@ describe 'Enumerable', ->
 
       expect(ret).toBeNull
       
-    it 'works for Object', ->
+    it 'works for Hash', ->
       ret = _b.find (k,v) ->
         v == 1
 
       expect(ret).toEqual ['a', 1]
-
-    it 'alias as detect', ->
-      expect(Array::detect).toBe Array::find
 
   describe '#findAll', ->
     it 'return all fined values', ->
@@ -107,8 +101,8 @@ describe 'Enumerable', ->
 
       expect(ret).toEqual b
 
-    it 'works for Object', ->
-      a = { a: 1, b: 2 , c: 1, d: 3, e: 4 }
+    it 'works for Hash', ->
+      a = H( a: 1, b: 2 , c: 1, d: 3, e: 4 )
       b = [ ['a', 1], ['c', 1], ['d', 3] ]
 
       ret = a.findAll (k, v) ->
@@ -126,8 +120,8 @@ describe 'Enumerable', ->
 
       expect(ret).toEqual b
 
-    it 'works for Object', ->
-      a = { a: 1, b: 2 , c: 1, d: 3, e: 4 }
+    it 'works for Hash', ->
+      a = H( a: 1, b: 2 , c: 1, d: 3, e: 4 )
       b = [ ['b', 2], ['e', 4] ]
 
       ret = a.reject (k, v) ->
@@ -177,7 +171,7 @@ describe 'Enumerable', ->
   describe '#groupBy', ->
     it 'works', ->
       a = [ 1, 2, 3, 4 ]
-      b = { a: [1, 3], b: [2, 4] }
+      b = H( a: [1, 3], b: [2, 4] )
 
       ret = a.groupBy (v) ->
         if v == 1 || v == 3 then 'a' else 'b'
@@ -185,19 +179,11 @@ describe 'Enumerable', ->
       expect(ret).toEqual b
       
 
-    it 'with Object', ->
-      a = { a: 1, b: 2, c: 3, d: 4 }
-      b = { a: [['a', 1], ['c', 3]], b: [['b', 2], ['d', 4]] }
+    it 'with Hash', ->
+      a = H( a: 1, b: 2, c: 3, d: 4 )
+      b = H( a: [['a', 1], ['c', 3]], b: [['b', 2], ['d', 4]] )
 
       ret = a.groupBy (k, v) ->
         if v == 1 || v == 3 then 'a' else 'b'
 
       expect(ret).toEqual b
-
-
-
-  
-
-
-
-

@@ -59,6 +59,11 @@ with rails 3.1
 	# app/assets/javascripts/application.js
 		//= require 'tagenjs'
 
+NOTE
+----
+
+for sroutcore, need load 'tagen' before 'sproutcore'
+
 Resources
 ---------
 
