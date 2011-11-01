@@ -1,14 +1,22 @@
 tagenjs, Javascript in Ruby way
 ===================================
 
-compability: IE9 FF4 Webkit # use Object.definePrototype. 
-
 Features
 --------
 
 * Ruby compability. e.g. `Enumerable`, `Enumerator`, `each`, `map` ... # write codeing between Ruby and Javascript
 * Javascript Name Convention. e.g. `#empty?` -> `isEmpty`, `find_all` -> `FindAll`
 * Best used with CoffeeScript. 
+
+Overview
+-------
+
+for Object,  use `_(x).constructorName()`
+
+others are exnted prorotype, so `[].isEmpty()`
+
+and don't use Object for data directly, use Hash instead, `H(a: 1).isEmpty()`
+
 
 API
 ------
