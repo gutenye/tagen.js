@@ -223,7 +223,7 @@ Enumerable = {
   _any: function(iterator) {
     var ret;
     ret = false;
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (ret |= iterator.apply(null, args)) return true;
@@ -233,7 +233,7 @@ Enumerable = {
   _all: function(iterator) {
     var ret;
     ret = true;
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (!iterator.apply(null, args)) {
@@ -246,7 +246,7 @@ Enumerable = {
   _none: function(iterator) {
     var ret;
     ret = true;
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (iterator.apply(null, args)) {
@@ -259,7 +259,7 @@ Enumerable = {
   _one: function(iterator) {
     var counts;
     counts = 0;
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (iterator.apply(null, args)) {
@@ -277,7 +277,7 @@ Enumerable = {
     var ret,
       _this = this;
     ret = [];
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return ret.push(iterator.apply(null, args));
@@ -288,7 +288,7 @@ Enumerable = {
     var ret,
       _this = this;
     ret = null;
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (iterator.apply(null, args)) {
@@ -302,7 +302,7 @@ Enumerable = {
     var ret,
       _this = this;
     ret = [];
-    this.each(function() {
+    this._each(function() {
       var args, value;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (iterator.apply(null, args)) {
@@ -316,7 +316,7 @@ Enumerable = {
     var ret,
       _this = this;
     ret = [];
-    this.each(function() {
+    this._each(function() {
       var args, value;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (!iterator.apply(null, args)) {
@@ -342,7 +342,7 @@ Enumerable = {
         throw 'wrong argument';
     }
     memo = initial;
-    this.each(function() {
+    this._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       if (initial === null) {
@@ -371,7 +371,7 @@ Enumerable = {
   _shuffle: function() {
     var rand, shuffled, _ref;
     _ref = [[], null], shuffled = _ref[0], rand = _ref[1];
-    this.each(function(value, index) {
+    this._each(function(value, index) {
       if (index === 0) {
         return shuffled[0] = value;
       } else {
@@ -384,7 +384,7 @@ Enumerable = {
   },
   _sortBy: function(iterator) {
     var ret;
-    ret = (this.map(function() {
+    ret = (this._map(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return {
@@ -408,7 +408,7 @@ Enumerable = {
     var ret,
       _this = this;
     ret = H();
-    this.each(function() {
+    this._each(function() {
       var args, key, value;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       key = iterator.apply(null, args);
@@ -521,14 +521,14 @@ Hash = (function(_super) {
   Hash.prototype._keys = function() {
     var keys;
     keys = [];
-    this.each(function(k) {
+    this._each(function(k) {
       return keys.push(k);
     });
     return keys;
   };
 
   Hash.prototype._values = function() {
-    return this.map(function(k, v) {
+    return this._map(function(k, v) {
       return v;
     });
   };
@@ -536,7 +536,7 @@ Hash = (function(_super) {
   Hash.prototype._hasKey = function(key) {
     var ret;
     ret = false;
-    this.each(function(k) {
+    this._each(function(k) {
       if (k === key) {
         ret = true;
         throw BREAKER;
@@ -548,7 +548,7 @@ Hash = (function(_super) {
   Hash.prototype._hasValue = function(value) {
     var ret;
     ret = false;
-    this.each(function(k, v) {
+    this._each(function(k, v) {
       if (v === value) {
         ret = true;
         throw BREAKER;
@@ -613,7 +613,7 @@ _.reopen(Array, {
     for (i = 0, _len = this.length; i < _len; i++) {
       v = this[i];
       if (_(v).instanceOf(Array)) {
-        return v.isEqual(ary[i]);
+        return v._isEqual(ary[i]);
       } else {
         if (v !== ary[i]) return false;
       }
@@ -638,10 +638,10 @@ _.reopen(Array, {
     var args, i, length, ret;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     args = [this].concat(__slice.call(args));
-    length = args.pluck('length').max();
+    length = args._pluck('length').max();
     ret = new Array(length);
     for (i = 0; 0 <= length ? i < length : i > length; 0 <= length ? i++ : i--) {
-      ret[i] = args.pluck("" + i);
+      ret[i] = args._pluck("" + i);
     }
     return ret;
   },
@@ -660,14 +660,14 @@ _.reopen(Array, {
     }
   },
   _compact: function() {
-    return this.findAll(function(value) {
+    return this._findAll(function(value) {
       return value !== null;
     });
   },
   _flatten: function(shallow) {
     var ret;
     ret = [];
-    this.each(function(v) {
+    this._each(function(v) {
       if (_(v).instanceOf(Array)) {
         v = shallow ? v : v.flatten();
         return ret = ret.concat(v);
@@ -680,7 +680,7 @@ _.reopen(Array, {
   _uniq: function(isSorted) {
     var ret;
     ret = [];
-    this.each(function(v, i) {
+    this._each(function(v, i) {
       if (0 === i || (isSorted === true ? ret.last() !== v : !ret.isInclude(v))) {
         ret.push(v);
       }
@@ -691,12 +691,12 @@ _.reopen(Array, {
   _without: function() {
     var args;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    return this.findAll(function(value) {
+    return this._findAll(function(value) {
       return !args.isInclude(value);
     });
   },
   _pluck: function(key) {
-    return this.map(function(data) {
+    return this._map(function(data) {
       return data[key];
     });
   },
@@ -712,7 +712,7 @@ _.reopen(Array, {
         };
     }
     ret = -1;
-    this.each(function(v, i, self) {
+    this._each(function(v, i, self) {
       if (iterator(v, i, self)) {
         ret = i;
         throw BREAKER;
@@ -723,7 +723,7 @@ _.reopen(Array, {
   _invoke: function() {
     var args, methodName;
     methodName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-    return this.map(function(value) {
+    return this._map(function(value) {
       var method;
       method = value[methodName];
       if (method) {

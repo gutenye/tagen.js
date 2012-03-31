@@ -2,7 +2,7 @@ Enumerable =
   # any?
   _any: (iterator)->
     ret = false
-    @each (args...)->
+    @_each (args...)->
       if ret |= iterator(args...)
         return true
     return !!ret
@@ -10,7 +10,7 @@ Enumerable =
   # all?
   _all: (iterator)->
     ret = true
-    @each (args...)->
+    @_each (args...)->
       if !iterator(args...)
         ret = false 
         throw BREAKER
@@ -19,7 +19,7 @@ Enumerable =
   # none?
   _none: (iterator)-> 
     ret = true
-    @each (args...)->
+    @_each (args...)->
       if iterator(args...)
         ret = false
         throw BREAKER
@@ -28,7 +28,7 @@ Enumerable =
   # one?
   _one: (iterator)->
     counts = 0
-    @each (args...)->
+    @_each (args...)->
       if iterator(args...)
         counts += 1
         throw BREAKER if counts == 2
@@ -36,13 +36,13 @@ Enumerable =
 
   _map: (iterator) ->
     ret = []
-    @each (args...) => 
+    @_each (args...) => 
       ret.push iterator(args...)
     ret
 
   _find: (iterator) ->
     ret = null
-    @each (args...) =>
+    @_each (args...) =>
       if iterator(args...)
         ret = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
         throw BREAKER
@@ -50,7 +50,7 @@ Enumerable =
 
   _findAll: (iterator) ->
     ret = []
-    @each (args...) =>
+    @_each (args...) =>
       if iterator(args...)
         value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
         ret.push value
@@ -60,7 +60,7 @@ Enumerable =
   # opsite of findAll.
   _reject: (iterator) ->
     ret = []
-    @each (args...) =>
+    @_each (args...) =>
       if !iterator(args...)
         value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
         ret.push value
@@ -85,7 +85,7 @@ Enumerable =
         throw 'wrong argument'
 
     memo = initial
-    @each (args...) ->
+    @_each (args...) ->
       if initial == null
         memo = args[0]
         initial = true
@@ -103,7 +103,7 @@ Enumerable =
   #
   # => null, value
   _max: () ->
-    if @isEmpty() 
+    if @_isEmpty() 
       return null
     else if _(@).instanceOf(Array)
       return Math.max.apply(Math, this)
@@ -111,7 +111,7 @@ Enumerable =
   # Return the minimum element (or element-based computation).
   # see max
   _min: (iterator) ->
-    if @isEmpty()
+    if @_isEmpty()
       return null
     else if _(@).instanceOf(Array)
       return Math.min.apply(Math, this)
@@ -120,7 +120,7 @@ Enumerable =
   # only in Array ?
   _shuffle: () ->
     [ shuffled, rand ] = [ [], null ]
-    @each (value, index) ->
+    @_each (value, index) ->
       if index == 0
         shuffled[0] = value
       else
@@ -132,24 +132,24 @@ Enumerable =
   # Sort the object's values by a criterion produced by an iterator.
   # ONLY Array
   _sortBy: (iterator) ->
-    ret = (@map (args...) ->
+    ret = (@_map (args...) ->
       { value: args[0], criteria: iterator(args...) }
     ).sort((a, b) ->
       [ a, b ] = [ a.criteria, b.criteria ]
       if a < b then -1 else if a > b then 1 else 0
     )
 
-    ret.pluck('value')
+    ret._pluck('value')
 
   # Groups the object's values by a criterion. Pass either a string attribute
   # to group by, or a function that returns the criterion.
   # @return [Hash]
   _groupBy: (iterator) ->
     ret = H()
-    @each (args...) =>
+    @_each (args...) =>
       key = iterator(args...)
       value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
-      ret.fetch_or_store(key, []).push(value)
+      ret._fetch_or_store(key, []).push(value)
     return ret
 
 root['Enumerable'] = Enumerable

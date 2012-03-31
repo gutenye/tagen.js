@@ -1,21 +1,18 @@
-tagenjs, connect Javascript and Ruby
+tagenjs, bring Ruby into Javascript world.
 ===================================
 
 Features
 --------
 
-* Ruby compability. e.g. `Enumerable`, `Enumerator`, `each`, `map` ... # write codeing between Ruby and Javascript
-* Javascript Name Convention. e.g. `#empty?` -> `isEmpty`, `find_all` -> `FindAll`
-* based on underscore
+* Ruby compability. let's write javascript as easy as Ruby.
+* Extend Javascript prototype without confict. e.g. `#_<method>`
+* Based on underscore.
 
-Overview
--------
-
-extend to property.
+How to Use
+----------
 
 	arr = [1, 2]
 	arr._isEmpty() #=> false
-
 
 for Object,  use `_(x).constructorName()`
 

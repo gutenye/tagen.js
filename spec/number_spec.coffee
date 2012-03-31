@@ -1,19 +1,19 @@
 describe 'Number', ->
-  describe '.max', ->
+  describe '._max', ->
     it 'get the largest value', ->
-      expect(Number.max(1, 2)).toEqual(2)
-      expect(Number.max(2, 1)).toEqual(2)
+      expect(Number._max(1, 2)).toEqual(2)
+      expect(Number._max(2, 1)).toEqual(2)
 
-  describe '.min', ->
+  describe '._min', ->
     it 'get the minium value', ->
-      expect(Number.min(1, 2)).toEqual(1)
-      expect(Number.min(2, 1)).toEqual(1)
+      expect(Number._min(1, 2)).toEqual(1)
+      expect(Number._min(2, 1)).toEqual(1)
 
-  describe '#times', ->
+  describe '#_times', ->
     it 'works', ->
       a = []
       b = [0, 1, 2]
-      (3).times (i) ->
+      (3)._times (i) ->
         a.push i
 
       expect(a).toEqual b

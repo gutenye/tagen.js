@@ -1,4 +1,4 @@
 describe 'Math', ->
-  describe '.mod', ->
+  describe '._mod', ->
     it 'works', ->
-      expect(Math.mod(3, 2)).toEqual 1
+      expect(Math._mod(3, 2)).toEqual 1

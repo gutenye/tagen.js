@@ -22,7 +22,7 @@ end
 
 module Neuter
 
-  DEBUG = true
+  DEBUG = false
 
   class SpadeWrapper < Rake::Pipeline::FileWrapper
     

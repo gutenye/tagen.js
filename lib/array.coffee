@@ -29,7 +29,7 @@ _.reopen Array,
     return false if @length != ary.length
     for v, i in this
       if _(v).instanceOf(Array) 
-        return v.isEqual(ary[i]) 
+        return v._isEqual(ary[i]) 
       else
         return false if v != ary[i]
     return true
@@ -53,10 +53,10 @@ _.reopen Array,
   # an index go together.
   _zip: (args...) ->
     args = [ this, args...]
-    length = args.pluck('length').max()
+    length = args._pluck('length')._max()
     ret = new Array(length)
     for i in [0...length]
-      ret[i] = args.pluck("#{i}")
+      ret[i] = args._pluck("#{i}")
     return ret
 
   # Get the first element of an array. Passing **n** will return the first N
@@ -77,7 +77,7 @@ _.reopen Array,
 
   # Trim out all null values from an array.
   _compact: () ->
-    @findAll (value) -> 
+    @_findAll (value) -> 
       value != null
 
   # Return a completely flattened version of an array.
@@ -85,9 +85,9 @@ _.reopen Array,
   # flatten(shallow=false)
   _flatten: (shallow) -> 
     ret = []
-    @each (v) ->
+    @_each (v) ->
       if _(v).instanceOf(Array)
-        v = if shallow then v else v.flatten()
+        v = if shallow then v else v._flatten()
         ret = ret.concat v
       else
         ret.push v
@@ -101,8 +101,8 @@ _.reopen Array,
   _uniq: (isSorted) ->
     ret = []
 
-    @each (v, i) ->
-      if 0 == i || (if isSorted == true then ret.last() != v else !ret.isInclude(v)) 
+    @_each (v, i) ->
+      if 0 == i || (if isSorted == true then ret._last() != v else !ret._isInclude(v)) 
         ret.push v
       ret
 
@@ -110,12 +110,12 @@ _.reopen Array,
 
   # Return a version of the array that does not contain the specified value(s).
   _without: (args...) ->
-    @findAll (value) -> !args.isInclude(value)
+    @_findAll (value) -> !args._isInclude(value)
 
   # data like [ {a: 1}, {a: 2} .. ]
   #
   _pluck: (key) ->
-    @map (data) ->
+    @_map (data) ->
       data[key]
 
   # findIndex(value)
@@ -131,7 +131,7 @@ _.reopen Array,
           v == obj
 
     ret = -1
-    @each (v, i, self)->
+    @_each (v, i, self)->
       if iterator(v, i, self)
         ret = i
         throw BREAKER
@@ -141,7 +141,7 @@ _.reopen Array,
   # Invoke a method (with arguments) on every item in a collection.
   # => null if no method
   _invoke: (methodName, args...) ->
-    @map (value) ->
+    @_map (value) ->
       method = value[methodName]
       if method 
         method.apply(value, args...)

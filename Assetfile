@@ -12,9 +12,21 @@ input "lib" do
   end
 end
 
+# tagen.js 
 input "tmp/lib" do
   match "main.js" do
     neuter("tagen.js")
+  end
+end
+
+# tagen-spade.js
+input "tmp/lib" do
+  match "*.js" do
+    minispade :rewrite_requires => true, :string => true, :module_id_generator => proc { |input|
+      name = input.path.sub(/\.js$/, '')
+      name == "main" ? "tagen" : "./#{name}"
+    }
+    concat "tagen-spade.js"
   end
 end
 

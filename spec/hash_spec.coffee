@@ -1,12 +1,12 @@
 describe 'Hash', ->
   _a = H(a: 1, b: 2, c: 3)
 
-  describe '#each', ->
+  describe '#_each', ->
     it 'works', ->
       a = H(a: 1, b: 2)
       b = {}
 
-      a.each (k, v)->
+      a._each (k, v)->
         b[k] = v
 
       expect(b).toEqual a.data
@@ -16,55 +16,55 @@ describe 'Hash', ->
       b = {}
       c = {a: 1}
 
-      a.each (k, v) ->
+      a._each (k, v) ->
         throw BREAKER if v == 2
         b[k] = v
 
       expect(b).toEqual c
 
-  describe '#keys', ->
+  describe '#_keys', ->
     it 'works', ->
       Hash::b = 1
       a = H(a: 1)
       b = ['a']
-      expect(a.keys()).toEqual b
+      expect(a._keys()).toEqual b
 
-  describe '#values', ->
+  describe '#_values', ->
     it 'works', ->
       Hash::b = 2
       a = H(a: 1)
       b = [1]
-      expect(a.values()).toEqual b
+      expect(a._values()).toEqual b
 
-  describe '#hasKey', ->
+  describe '#_hasKey', ->
     it 'works', ->
       a = H(a: 1)
-      expect(a.hasKey('a')).toBeTruthy
-      expect(a.hasKey('b')).toBeFalsy
+      expect(a._hasKey('a')).toBeTruthy
+      expect(a._hasKey('b')).toBeFalsy
 
-  describe '#hasValue', ->
+  describe '#_hasValue', ->
     it 'works', ->
       a = H(a: 1)
-      expect(a.hasValue(1)).toBeTruthy
-      expect(a.hasValue(2)).toBeFalsy
+      expect(a._hasValue(1)).toBeTruthy
+      expect(a._hasValue(2)).toBeFalsy
 
-  describe '#toHash', ->
+  describe '#_toHash', ->
     it 'returns itself', ->
       h = H()
 
-      expect(h.toHash()).toBe h
+      expect(h._toHash()).toBe h
 
-  describe '#fetch', ->
+  describe '#_fetch', ->
     it 'return the value', ->
-      expect(_a.fetch('a')).toEqual 1
+      expect(_a._fetch('a')).toEqual 1
 
     it "returns null if don't have the key", ->
-      expect(_a.fetch('z')).toEqual null
+      expect(_a._fetch('z')).toEqual null
 
     it 'default value', ->
-      expect(_a.fetch('z', 2)).toEqual 2
-      expect(_a.fetch('z')).toEqual null
-      expect(_a.fetch('a', 2)).toEqual 1
+      expect(_a._fetch('z', 2)).toEqual 2
+      expect(_a._fetch('z')).toEqual null
+      expect(_a._fetch('a', 2)).toEqual 1
 
   describe '#store', ->
     _x = null
@@ -72,20 +72,20 @@ describe 'Hash', ->
       _x = H()
 
     it 'k and v', ->
-      _x.store('a', 1)
-      expect(_x.fetch('a')).toEqual 1
+      _x._store('a', 1)
+      expect(_x._fetch('a')).toEqual 1
 
-  describe '#fetch_or_store', ->
+  describe '#_fetch_or_store', ->
     _x = null
     beforeEach ->
       _x = H(a: 1)
 
     it 'fetch the existing value', ->
-      expect(_x.fetch_or_store('a', 2)).toEqual 1
+      expect(_x._fetch_or_store('a', 2)).toEqual 1
 
     it 'store the missing value', ->
-      expect(_x.fetch_or_store('b', 2)).toEqual 2
-      expect(_x.fetch('b')).toEqual 2
+      expect(_x._fetch_or_store('b', 2)).toEqual 2
+      expect(_x._fetch('b')).toEqual 2
 
   describe '#toString', ->
     it 'works', ->

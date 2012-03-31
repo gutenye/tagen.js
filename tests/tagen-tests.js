@@ -1,75 +1,75 @@
 
-describe('Array', function() {
-  describe('#each', function() {
-    it('works', function() {
+describe("Array", function() {
+  describe("#_each", function() {
+    it("works", function() {
       var a, b, ret;
       a = [1, 2];
       b = [[1, 0], [2, 1]];
       ret = [];
-      a.each(function(v, i) {
+      a._each(function(v, i) {
         return ret.push([v, i]);
       });
       return expect(ret).toEqual(b);
     });
-    it('return <#Enumerator> when called without any arguments', function() {
+    it("return <#Enumerator> when called without any arguments", function() {
       var a, b;
       a = [1, 2];
-      b = a.each();
+      b = a._each();
       expect(b.constructor).toEqual(Enumerator);
       return expect(b.data).toEqual(a);
     });
-    return it('break if throw BREAKER', function() {
+    return it("break if throw BREAKER", function() {
       var a, b, c;
       a = [1, 2, 3];
       b = [];
       c = [1];
-      a.each(function(v) {
+      a._each(function(v) {
         if (v === 2) throw BREAKER;
         return b.push(v);
       });
       return expect(b).toEqual(c);
     });
   });
-  describe('#isEqual', function() {
-    it('works', function() {
-      expect([1, 2].isEqual([1, 2])).toBeTruthy();
-      return expect([1, 2].isEqual([1, 3])).toBeFalsy();
+  describe("#_isEqual", function() {
+    it("works", function() {
+      expect([1, 2]._isEqual([1, 2])).toBeTruthy();
+      return expect([1, 2]._isEqual([1, 3])).toBeFalsy();
     });
-    return it('with nested array', function() {
-      return expect([1, [2]].isEqual([1, [2]])).toBeTruthy();
-    });
-  });
-  describe('#isInclude', function() {
-    it('works', function() {
-      expect([1, 2].isInclude(2)).toBeTruthy();
-      return expect([1, 2].isInclude(9)).toBeFalsy();
-    });
-    return it('alias as contains', function() {
-      return expect([].contains).toBe([].isInclude);
+    return it("with nested array", function() {
+      return expect([1, [2]]._isEqual([1, [2]])).toBeTruthy();
     });
   });
-  describe('#isEmpty', function() {
-    return it('works', function() {
-      expect([].isEmpty()).toBeTruthy();
-      return expect([1].isEmpty()).toBeFalsy();
+  describe("#_isInclude", function() {
+    it("works", function() {
+      expect([1, 2]._isInclude(2)).toBeTruthy();
+      return expect([1, 2]._isInclude(9)).toBeFalsy();
+    });
+    return it("alias as _contains", function() {
+      return expect([]._contains).toBe([]._isInclude);
     });
   });
-  describe('#clone', function() {
-    return it('return a shadow-clone', function() {
+  describe("#_isEmpty", function() {
+    return it("works", function() {
+      expect([]._isEmpty()).toBeTruthy();
+      return expect([1]._isEmpty()).toBeFalsy();
+    });
+  });
+  describe("#_clone", function() {
+    return it("return a shadow-clone", function() {
       var a, b;
       b = [1];
-      a = b.clone();
+      a = b._clone();
       expect(a).toEqual(b);
       return expect(a).not.toBe(b);
     });
   });
-  describe('#random', function() {
-    return it('works', function() {
+  describe("#_random", function() {
+    return it("works", function() {
       var counts, data, i, k;
       data = [0, 1];
       counts = {};
       for (i = 0; i <= 9; i++) {
-        k = data.random();
+        k = data._random();
         if (counts[k] == null) counts[k] = 0;
         counts[k] += 1;
       }
@@ -77,67 +77,67 @@ describe('Array', function() {
       return expect(counts[0]).not.toEqual(10);
     });
   });
-  describe('#zip', function() {
-    return it('works', function() {
+  describe("#_zip", function() {
+    return it("works", function() {
       var a, b;
-      a = [1, 2].zip([3, 4]);
+      a = [1, 2]._zip([3, 4]);
       b = [[1, 3], [2, 4]];
       return expect(a).toEqual(b);
     });
   });
-  describe('#first', function() {
-    return it('return the first element of the array', function() {
-      return expect([1, 2].first()).toEqual(1);
+  describe("#_first", function() {
+    return it("return the first element of the array", function() {
+      return expect([1, 2]._first()).toEqual(1);
     });
   });
-  describe('#last', function() {
-    return it('return the last element of the array', function() {
-      return expect([1, 2].last()).toEqual(2);
+  describe("#_last", function() {
+    return it("return the last element of the array", function() {
+      return expect([1, 2]._last()).toEqual(2);
     });
   });
-  describe('#compact', function() {
-    return it('remove all null values', function() {
+  describe("#_compact", function() {
+    return it("remove all null values", function() {
       var a, b;
       a = [1, true, null, false, []];
       b = [1, true, false, []];
-      return expect(a.compact()).toEqual(b);
+      return expect(a._compact()).toEqual(b);
     });
   });
-  describe('#flatten', function() {
-    it('flatten one-level', function() {
+  describe("#_flatten", function() {
+    it("flatten one-level", function() {
       var a, b;
       a = [1, [2]];
       b = [1, 2];
-      return expect(a.flatten()).toEqual(b);
+      return expect(a._flatten()).toEqual(b);
     });
-    return it('flatten multi-levels', function() {
+    return it("flatten multi-levels", function() {
       var a, b, c;
       a = [1, [2, [3]]];
       b = [1, 2, 3];
       c = [1, 2, [3]];
-      expect(a.flatten()).toEqual(b);
-      return expect(a.flatten(true)).toEqual(c);
+      expect(a._flatten()).toEqual(b);
+      return expect(a._flatten(true)).toEqual(c);
     });
   });
-  describe('#uniq', function() {
-    return it('removes duplicate-values', function() {
+  describe("#_uniq", function() {
+    return it("removes duplicate-values", function() {
       var a, b;
       a = [1, 3, 2, 1, 3];
       b = [1, 3, 2];
-      return expect(a.uniq()).toEqual(b);
+      return expect(a._uniq()).toEqual(b);
     });
   });
-  describe('#without', function() {
-    return it('Take the difference between one array and another.', function() {
+  describe("#_without", function() {
+    return it("Take the difference between one array and another.", function() {
       var a, b, c;
       a = [1, 2, 3, 4];
       b = [2, 4];
       c = [1, 3];
-      return expect(a.without.apply(a, b)).toEqual(c);
+      return expect(a._without.apply(a, b)).toEqual(c);
     });
   });
-  describe('#pluck', function() {
-    return it('works', function() {
+  describe("#_pluck", function() {
+    return it("works", function() {
       var a, b;
       a = [
         {
@@ -147,32 +147,32 @@ describe('Array', function() {
         }
       ];
       b = [1, 2];
-      return expect(a.pluck('a')).toEqual(b);
+      return expect(a._pluck("a")).toEqual(b);
     });
   });
-  describe('#findIndex', function() {
-    it('find with a value', function() {
+  describe("#_findIndex", function() {
+    it("find with a value", function() {
       var a, b;
       a = [1, 2, 3];
       b = 1;
-      return expect(a.findIndex(2)).toEqual(b);
+      return expect(a._findIndex(2)).toEqual(b);
     });
-    return it('find with an iterator', function() {
+    return it("find with an iterator", function() {
       var a, b, ret;
       a = [1, 2, 3];
       b = 1;
-      ret = a.findIndex(function(v) {
+      ret = a._findIndex(function(v) {
         return v === 2;
       });
       return expect(ret).toEqual(b);
     });
   });
-  return describe('#invoke', function() {
-    return it('call each method', function() {
+  return describe("#_invoke", function() {
+    return it("call each method", function() {
       var a, b;
       a = [1, 2];
-      b = ['1', '2'];
-      return expect(a.invoke('toString')).toEqual(b);
+      b = ["1", "2"];
+      return expect(a._invoke("toString")).toEqual(b);
     });
   });
 });
@@ -465,117 +465,117 @@ describe('Enumerable', function() {
     a: 1,
     b: 2
   });
-  describe('#any', function() {
+  describe('#_any', function() {
     it('any one is true => true', function() {
       var ret;
-      ret = _a.any(function(v) {
+      ret = _a._any(function(v) {
         return v === 1;
       });
       return expect(ret).toBeTruthy();
     });
     return it('all false => false', function() {
       var ret;
-      ret = _a.any(function(v) {
+      ret = _a._any(function(v) {
         return v === -1;
       });
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#all', function() {
+  describe('#_all', function() {
     it('all true => true', function() {
       var ret;
-      ret = _a.all(function(v) {
+      ret = _a._all(function(v) {
         return v === 1 || v === 2;
       });
       return expect(ret).toBeTruthy();
     });
     return it('one false => false', function() {
       var ret;
-      ret = _a.all(function(v) {
+      ret = _a._all(function(v) {
         return v === 1;
       });
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#none', function() {
+  describe('#_none', function() {
     it('all false => true', function() {
       var ret;
-      ret = _a.none(function(v) {
+      ret = _a._none(function(v) {
         return v === -1;
       });
       return expect(ret).toBeTruthy();
     });
     return it('one true => false', function() {
       var ret;
-      ret = _a.none(function(v) {
+      ret = _a._none(function(v) {
         return v === 1;
       });
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#one', function() {
+  describe('#_one', function() {
     it('only one true => true', function() {
       var ret;
-      ret = _a.one(function(v) {
+      ret = _a._one(function(v) {
         return v === 1;
       });
       return expect(ret).toBeTruthy();
     });
     it('more than two true => false', function() {
       var ret;
-      ret = _a.one(function(v) {
+      ret = _a._one(function(v) {
         return v === 1 || v === 2;
       });
       return expect(ret).toBeFalsy();
     });
     return it('all false => false', function() {
       var ret;
-      ret = _a.one(function(v) {
+      ret = _a._one(function(v) {
         return v === -1;
       });
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#map', function() {
+  describe('#_map', function() {
     return it('use native', function() {
       var a, b, ret;
       a = [1, 2];
       b = ['1', '2'];
-      ret = a.map(function(v) {
+      ret = a._map(function(v) {
         return v.toString();
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#find', function() {
+  describe('#_find', function() {
     it('find first value is true', function() {
       var ret;
-      ret = _a.find(function(v) {
+      ret = _a._find(function(v) {
         return v === 1;
       });
       return expect(ret).toEqual(1);
     });
     it('retuns null if not found', function() {
       var ret;
-      ret = _a.find(function(v) {
+      ret = _a._find(function(v) {
         return v === -1;
       });
       return expect(ret).toBeNull;
     });
     return it('works for Hash', function() {
       var ret;
-      ret = _b.find(function(k, v) {
+      ret = _b._find(function(k, v) {
         return v === 1;
       });
       return expect(ret).toEqual(['a', 1]);
     });
   });
-  describe('#findAll', function() {
+  describe('#_findAll', function() {
     it('return all fined values', function() {
       var a, b, ret;
       a = [1, 2, 1, 3, 4];
       b = [1, 1, 3];
-      ret = a.findAll(function(v) {
+      ret = a._findAll(function(v) {
         return v === 1 || v === 3;
       });
       return expect(ret).toEqual(b);
@@ -590,18 +590,18 @@ describe('Enumerable', function() {
         e: 4
       });
       b = [['a', 1], ['c', 1], ['d', 3]];
-      ret = a.findAll(function(k, v) {
+      ret = a._findAll(function(k, v) {
         return v === 1 || v === 3;
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#reject', function() {
+  describe('#_reject', function() {
     it('return all expect rejected values', function() {
       var a, b, ret;
       a = [1, 2, 1, 3, 4];
       b = [2, 4];
-      ret = a.reject(function(v) {
+      ret = a._reject(function(v) {
         return v === 1 || v === 3;
       });
       return expect(ret).toEqual(b);
@@ -616,18 +616,18 @@ describe('Enumerable', function() {
         e: 4
       });
       b = [['b', 2], ['e', 4]];
-      ret = a.reject(function(k, v) {
+      ret = a._reject(function(k, v) {
         return v === 1 || v === 3;
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#inject', function() {
+  describe('#_inject', function() {
     it('with initial value', function() {
       var a, b, ret;
       a = [1, 2, 3];
       b = 6;
-      ret = a.inject(0, function(memo, v) {
+      ret = a._inject(0, function(memo, v) {
         return memo + v;
       });
       return expect(ret).toEqual(b);
@@ -636,23 +636,23 @@ describe('Enumerable', function() {
       var a, b, ret;
       a = [1, 2, 3];
       b = 6;
-      ret = a.inject(function(memo, v) {
+      ret = a._inject(function(memo, v) {
         return memo + v;
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#max', function() {
+  describe('#_max', function() {
     return it('call without argument', function() {
-      return expect(_a.max()).toEqual(2);
+      return expect(_a._max()).toEqual(2);
     });
   });
-  describe('#min', function() {
+  describe('#_min', function() {
     return it('call without arguments', function() {
-      return expect(_a.min()).toEqual(1);
+      return expect(_a._min()).toEqual(1);
     });
   });
-  describe('#shuffle', function() {
+  describe('#_shuffle', function() {
     return it('works', function() {
       var i, numbers;
       numbers = (function() {
@@ -663,21 +663,21 @@ describe('Enumerable', function() {
         }
         return _results;
       })();
-      return expect(numbers.shuffle()).not.toEqual(numbers);
+      return expect(numbers._shuffle()).not.toEqual(numbers);
     });
   });
-  describe('#sortBy', function() {
+  describe('#_sortBy', function() {
     return it('works', function() {
       var a, b, ret;
       a = [[1, 9], [2, 8]];
       b = [[2, 8], [1, 9]];
-      ret = a.sortBy(function(v, i) {
+      ret = a._sortBy(function(v, i) {
         return v[1];
       });
       return expect(ret).toEqual(b);
     });
   });
-  return describe('#groupBy', function() {
+  return describe('#_groupBy', function() {
     it('works', function() {
       var a, b, ret;
       a = [1, 2, 3, 4];
@@ -685,7 +685,7 @@ describe('Enumerable', function() {
         a: [1, 3],
         b: [2, 4]
       });
-      ret = a.groupBy(function(v) {
+      ret = a._groupBy(function(v) {
         if (v === 1 || v === 3) {
           return 'a';
         } else {
@@ -706,7 +706,7 @@ describe('Enumerable', function() {
         a: [['a', 1], ['c', 3]],
         b: [['b', 2], ['d', 4]]
       });
-      ret = a.groupBy(function(k, v) {
+      ret = a._groupBy(function(k, v) {
         if (v === 1 || v === 3) {
           return 'a';
         } else {
@@ -719,12 +719,12 @@ describe('Enumerable', function() {
 });
 
 describe('Enumerator', function() {
-  return describe('#with_object', function() {
+  return describe('#_with_object', function() {
     return it('Array', function() {
       var a, b, ret;
       a = new Enumerator([1, 2]);
       b = [[1, 0], [2, 1]];
-      ret = a.with_object([], function(memo, v, i) {
+      ret = a._with_object([], function(memo, v, i) {
         return memo.push([v, i]);
       });
       return expect(ret).toEqual(b);
@@ -739,7 +739,7 @@ describe('Hash', function() {
     b: 2,
     c: 3
   });
-  describe('#each', function() {
+  describe('#_each', function() {
     it('works', function() {
       var a, b;
       a = H({
@@ -747,7 +747,7 @@ describe('Hash', function() {
         b: 2
       });
       b = {};
-      a.each(function(k, v) {
+      a._each(function(k, v) {
         return b[k] = v;
       });
       return expect(b).toEqual(a.data);
@@ -763,14 +763,14 @@ describe('Hash', function() {
       c = {
         a: 1
       };
-      a.each(function(k, v) {
+      a._each(function(k, v) {
         if (v === 2) throw BREAKER;
         return b[k] = v;
       });
       return expect(b).toEqual(c);
     });
   });
-  describe('#keys', function() {
+  describe('#_keys', function() {
     return it('works', function() {
       var a, b;
       Hash.prototype.b = 1;
@@ -778,10 +778,10 @@ describe('Hash', function() {
         a: 1
       });
       b = ['a'];
-      return expect(a.keys()).toEqual(b);
+      return expect(a._keys()).toEqual(b);
     });
   });
-  describe('#values', function() {
+  describe('#_values', function() {
     return it('works', function() {
       var a, b;
       Hash.prototype.b = 2;
@@ -789,47 +789,47 @@ describe('Hash', function() {
         a: 1
       });
       b = [1];
-      return expect(a.values()).toEqual(b);
+      return expect(a._values()).toEqual(b);
     });
   });
-  describe('#hasKey', function() {
+  describe('#_hasKey', function() {
     return it('works', function() {
       var a;
       a = H({
         a: 1
       });
-      expect(a.hasKey('a')).toBeTruthy;
-      return expect(a.hasKey('b')).toBeFalsy;
+      expect(a._hasKey('a')).toBeTruthy;
+      return expect(a._hasKey('b')).toBeFalsy;
     });
   });
-  describe('#hasValue', function() {
+  describe('#_hasValue', function() {
     return it('works', function() {
       var a;
       a = H({
         a: 1
       });
-      expect(a.hasValue(1)).toBeTruthy;
-      return expect(a.hasValue(2)).toBeFalsy;
+      expect(a._hasValue(1)).toBeTruthy;
+      return expect(a._hasValue(2)).toBeFalsy;
     });
   });
-  describe('#toHash', function() {
+  describe('#_toHash', function() {
     return it('returns itself', function() {
       var h;
       h = H();
-      return expect(h.toHash()).toBe(h);
+      return expect(h._toHash()).toBe(h);
     });
   });
-  describe('#fetch', function() {
+  describe('#_fetch', function() {
     it('return the value', function() {
-      return expect(_a.fetch('a')).toEqual(1);
+      return expect(_a._fetch('a')).toEqual(1);
     });
     it("returns null if don't have the key", function() {
-      return expect(_a.fetch('z')).toEqual(null);
+      return expect(_a._fetch('z')).toEqual(null);
     });
     return it('default value', function() {
-      expect(_a.fetch('z', 2)).toEqual(2);
-      expect(_a.fetch('z')).toEqual(null);
-      return expect(_a.fetch('a', 2)).toEqual(1);
+      expect(_a._fetch('z', 2)).toEqual(2);
+      expect(_a._fetch('z')).toEqual(null);
+      return expect(_a._fetch('a', 2)).toEqual(1);
     });
   });
   describe('#store', function() {
@@ -839,11 +839,11 @@ describe('Hash', function() {
       return _x = H();
     });
     return it('k and v', function() {
-      _x.store('a', 1);
-      return expect(_x.fetch('a')).toEqual(1);
+      _x._store('a', 1);
+      return expect(_x._fetch('a')).toEqual(1);
     });
   });
-  describe('#fetch_or_store', function() {
+  describe('#_fetch_or_store', function() {
     var _x;
     _x = null;
     beforeEach(function() {
@@ -852,11 +852,11 @@ describe('Hash', function() {
       });
     });
     it('fetch the existing value', function() {
-      return expect(_x.fetch_or_store('a', 2)).toEqual(1);
+      return expect(_x._fetch_or_store('a', 2)).toEqual(1);
     });
     return it('store the missing value', function() {
-      expect(_x.fetch_or_store('b', 2)).toEqual(2);
-      return expect(_x.fetch('b')).toEqual(2);
+      expect(_x._fetch_or_store('b', 2)).toEqual(2);
+      return expect(_x._fetch('b')).toEqual(2);
     });
   });
   return describe('#toString', function() {
@@ -871,32 +871,32 @@ describe('Hash', function() {
 });
 
 describe('Math', function() {
-  return describe('.mod', function() {
+  return describe('._mod', function() {
     return it('works', function() {
-      return expect(Math.mod(3, 2)).toEqual(1);
+      return expect(Math._mod(3, 2)).toEqual(1);
     });
   });
 });
 
 describe('Number', function() {
-  describe('.max', function() {
+  describe('._max', function() {
     return it('get the largest value', function() {
-      expect(Number.max(1, 2)).toEqual(2);
-      return expect(Number.max(2, 1)).toEqual(2);
+      expect(Number._max(1, 2)).toEqual(2);
+      return expect(Number._max(2, 1)).toEqual(2);
     });
   });
-  describe('.min', function() {
+  describe('._min', function() {
     return it('get the minium value', function() {
-      expect(Number.min(1, 2)).toEqual(1);
-      return expect(Number.min(2, 1)).toEqual(1);
+      expect(Number._min(1, 2)).toEqual(1);
+      return expect(Number._min(2, 1)).toEqual(1);
     });
   });
-  return describe('#times', function() {
+  return describe('#_times', function() {
     return it('works', function() {
       var a, b;
       a = [];
       b = [0, 1, 2];
-      3..times(function(i) {
+      3.._times(function(i) {
         return a.push(i);
       });
       return expect(a).toEqual(b);
@@ -905,36 +905,36 @@ describe('Number', function() {
 });
 
 describe('String', function() {
-  describe('#toInteger', function() {
+  describe('#_toInteger', function() {
     return it('convert a string to integer', function() {
-      return expect('123'.toInteger()).toEqual(123);
+      return expect('123'._toInteger()).toEqual(123);
     });
   });
-  describe('#pluralize', function() {
+  describe('#_pluralize', function() {
     return it('pluralize a word', function() {
-      return expect('car'.pluralize()).toEqual('cars');
+      return expect('car'._pluralize()).toEqual('cars');
     });
   });
-  describe('#capitalize', function() {
+  describe('#_capitalize', function() {
     return it('capitalize a word', function() {
-      return expect('car'.capitalize()).toEqual('Car');
+      return expect('car'._capitalize()).toEqual('Car');
     });
   });
-  describe('#endsWith', function() {
+  describe('#_endsWith', function() {
     return it("check a string's end", function() {
-      expect('car'.endsWith('r')).toBeTruthy();
-      return expect('car'.endsWith('ar')).toBeTruthy();
+      expect('car'._endsWith('r')).toBeTruthy();
+      return expect('car'._endsWith('ar')).toBeTruthy();
     });
   });
-  describe('#reverse', function() {
+  describe('#_reverse', function() {
     return it('reverse a string', function() {
-      return expect('car'.reverse()).toEqual('rac');
+      return expect('car'._reverse()).toEqual('rac');
     });
   });
-  return describe('#isEmpty', function() {
+  return describe('#_isEmpty', function() {
     return it('works', function() {
-      expect(''.isEmpty()).toBeTruthy();
-      return expect('x'.isEmpty()).toBeFalsy();
+      expect(''._isEmpty()).toBeTruthy();
+      return expect('x'._isEmpty()).toBeFalsy();
     });
   });
 });

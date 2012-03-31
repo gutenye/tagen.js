@@ -49,16 +49,16 @@ class Hash extends Object
 
   _keys: () -> 
     keys = []
-    @each (k) ->
+    @_each (k) ->
       keys.push k
     return keys
 
   _values: ()->
-    @map (k,v)-> v
+    @_map (k,v)-> v
 
   _hasKey: (key)->
     ret = false
-    @each (k) ->
+    @_each (k) ->
       if k == key
         ret = true 
         throw BREAKER
@@ -66,7 +66,7 @@ class Hash extends Object
 
   _hasValue: (value)->
     ret = false
-    @each (k,v) ->
+    @_each (k,v) ->
       if v == value
         ret = true
         throw BREAKER

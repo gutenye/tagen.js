@@ -1,26 +1,26 @@
 describe 'String', ->
-  describe '#toInteger', ->
+  describe '#_toInteger', ->
     it 'convert a string to integer', ->
-      expect('123'.toInteger()).toEqual 123
+      expect('123'._toInteger()).toEqual 123
 
-  describe '#pluralize', ->
+  describe '#_pluralize', ->
     it 'pluralize a word', ->
-      expect('car'.pluralize()).toEqual 'cars'
+      expect('car'._pluralize()).toEqual 'cars'
 
-  describe '#capitalize', ->
+  describe '#_capitalize', ->
     it 'capitalize a word', ->
-      expect('car'.capitalize()).toEqual 'Car'
+      expect('car'._capitalize()).toEqual 'Car'
 
-  describe '#endsWith', ->
+  describe '#_endsWith', ->
     it "check a string's end", ->
-      expect('car'.endsWith('r')).toBeTruthy()
-      expect('car'.endsWith('ar')).toBeTruthy()
+      expect('car'._endsWith('r')).toBeTruthy()
+      expect('car'._endsWith('ar')).toBeTruthy()
 
-  describe '#reverse', ->
+  describe '#_reverse', ->
     it 'reverse a string', ->
-      expect('car'.reverse()).toEqual 'rac'
+      expect('car'._reverse()).toEqual 'rac'
 
-  describe '#isEmpty', ->
+  describe '#_isEmpty', ->
     it 'works', ->
-      expect(''.isEmpty()).toBeTruthy()
-      expect('x'.isEmpty()).toBeFalsy()
+      expect(''._isEmpty()).toBeTruthy()
+      expect('x'._isEmpty()).toBeFalsy()
