@@ -167,7 +167,7 @@ describe("Array", function() {
       return expect(ret).toEqual(b);
     });
   });
-  return describe("#_invoke", function() {
+  describe("#_invoke", function() {
     return it("call each method", function() {
       var a, b;
       a = [1, 2];
@@ -175,31 +175,39 @@ describe("Array", function() {
       return expect(a._invoke("toString")).toEqual(b);
     });
   });
+  return describe("#_transpose", function() {
+    return it("transposes an array", function() {
+      var a, b;
+      a = [[1, 2], [3, 4]];
+      b = [[1, 3], [2, 4]];
+      return expect(a._transpose()).toEqual(b);
+    });
+  });
 });
 
-describe('_', function() {
-  describe('.reopen', function() {
-    it('a Class', function() {
+describe("_", function() {
+  describe(".reopen", function() {
+    it("a Class", function() {
       _.reopen(Array, {
         happy: 1
       });
       return expect(Array.prototype.happy).toEqual(1);
     });
-    it('overwrite=false', function() {
+    it("overwrite=false", function() {
       Array.prototype.a = 1;
       _.reopen(Array, {
         a: 2
       });
       return expect(Array.prototype.a).toEqual(1);
     });
-    it('overwrite=true', function() {
+    it("overwrite=true", function() {
       Array.prototype.a = 1;
       _.reopen(Array, {
         a: 2
       }, true);
       return expect(Array.prototype.a).toEqual(2);
     });
-    it('a Guten', function() {
+    it("a Guten", function() {
       var Guten, g;
       Guten = (function() {
 
@@ -214,20 +222,20 @@ describe('_', function() {
       g = new Guten;
       return expect(g.c).toEqual(1);
     });
-    return it('alias mixin', function() {
+    return it("alias mixin", function() {
       return expect(_.mixin).toBe(_.reopen);
     });
   });
-  describe('.reopenClass', function() {
-    return it('a Class', function() {
+  describe(".reopenClass", function() {
+    return it("a Class", function() {
       _.reopenClass(Object, {
         c: 1
       });
       return expect(Object.c).toEqual(1);
     });
   });
-  describe('.uniqueId', function() {
-    it('can generate a globally-unique stream', function() {
+  describe(".uniqueId", function() {
+    it("can generate a globally-unique stream", function() {
       var a, b, i, _ref;
       _ref = [[], []], a = _ref[0], b = _ref[1];
       for (i = 0; i < 100; i++) {
@@ -236,30 +244,29 @@ describe('_', function() {
       }
       return expect(a).toEqual(b);
     });
-    return it('with prefix', function() {
-      return expect(_.uniqueId('guten')).toEqual('guten100');
+    return it("with prefix", function() {
+      return expect(_.uniqueId("guten")).toEqual("guten100");
     });
   });
-  describe('.try', function() {
-    it('return null if object is null', function() {
-      return expect(_["try"](null, 'length')).toBeNull();
+  describe(".try", function() {
+    it("return null if object is null", function() {
+      return expect(_["try"](null, "length")).toBeNull();
     });
-    it('calls a method with arguments', function() {
-      return expect(_["try"]([1, 2], 'slice', 1)).toEqual([2]);
+    it("calls a method with arguments", function() {
+      return expect(_["try"]([1, 2], "slice", 1)).toEqual([2]);
     });
-    return it('return null if no method', function() {
-      return expect(_["try"]({}, 'foo_method')).toBeNull();
+    return it("return null if no method", function() {
+      return expect(_["try"]({}, "foo_method")).toBeNull();
     });
   });
-  describe('.escape', function() {
-    return it('return safe HTML characters', function() {
+  describe(".escape", function() {
+    return it("return safe HTML characters", function() {
       var chars, k, v, _results;
       chars = {
-        '"': '&quot;',
-        "'": '&#x27;',
-        '/': '&#x2F;',
-        '>': '&gt;',
-        '<': '&lt;'
+        ": \"&quot;\"": "&#x27;",
+        "/": "&#x2F;",
+        ">": "&gt;",
+        "<": "&lt;"
       };
       _results = [];
       for (k in chars) {
@@ -269,16 +276,16 @@ describe('_', function() {
       return _results;
     });
   });
-  return describe('.isEqual', function() {
-    it('Number', function() {
+  return describe(".isEqual", function() {
+    it("Number", function() {
       expect(_.isEqual(1, 1)).toTruthy;
       return expect(_.isEqual(1, 2)).toFalsy;
     });
-    it('String', function() {
-      expect(_.isEqual('1', '1')).toTruthy;
-      return expect(_.isEqual('1', '2')).toFalsy;
+    it("String", function() {
+      expect(_.isEqual("1", "1")).toTruthy;
+      return expect(_.isEqual("1", "2")).toFalsy;
     });
-    it('Object', function() {
+    it("Object", function() {
       expect(_.isEqual({
         a: 1
       }, {
@@ -290,16 +297,16 @@ describe('_', function() {
         a: 2
       })).toFalsy;
     });
-    return it('Array', function() {
+    return it("Array", function() {
       expect(_.isEqual([1], [1])).toTruthy;
       return expect(_.isEqual([1], [2])).toFalsy;
     });
   });
 });
 
-describe('Object', function() {
-  describe('#reopen', function() {
-    return it('works', function() {
+describe("Object", function() {
+  describe("#reopen", function() {
+    return it("works", function() {
       var a;
       a = [1];
       _(a).reopen({
@@ -308,47 +315,47 @@ describe('Object', function() {
       return expect(a.a).toEqual(1);
     });
   });
-  describe('(R) prorotype', function() {
-    return it('is Wrapper.property', function() {
+  describe("(R) prorotype", function() {
+    return it("is Wrapper.property", function() {
       _.prototype.a = 1;
-      return expect(_('x').a).toEqual(1);
+      return expect(_("x").a).toEqual(1);
     });
   });
-  describe('#instanceOf', function() {
-    it('Boolean', function() {
+  describe("#instanceOf", function() {
+    it("Boolean", function() {
       expect(_(true).instanceOf(Boolean)).toBeTruthy();
       return expect(_(false).instanceOf(Boolean)).toBeTruthy();
     });
-    it('Number', function() {
+    it("Number", function() {
       expect(_(1).instanceOf(Number)).toBeTruthy();
       return expect(_(1.0).instanceOf(Number)).toBeTruthy();
     });
-    it('String', function() {
-      return expect(_('x').instanceOf(String)).toBeTruthy();
+    it("String", function() {
+      return expect(_("x").instanceOf(String)).toBeTruthy();
     });
-    it('Array', function() {
+    it("Array", function() {
       return expect(_([]).instanceOf(Array)).toBeTruthy();
     });
-    it('Object', function() {
+    it("Object", function() {
       return expect(_({}).instanceOf(Object)).toBeTruthy();
     });
-    it('Function', function() {
+    it("Function", function() {
       return expect(_(function() {}).instanceOf(Function)).toBeTruthy();
     });
-    it('Date', function() {
+    it("Date", function() {
       return expect(_(new Date()).instanceOf(Date)).toBeTruthy();
     });
-    it('RegExp', function() {
+    it("RegExp", function() {
       return expect(_(/(?:)/).instanceOf(RegExp)).toBeTruthy();
     });
-    it('Arguments', function() {
+    it("Arguments", function() {
       var getArguments;
       getArguments = function() {
         return arguments;
       };
-      return expect(_(getArguments()).instanceOf('Arguments')).toBeTruthy();
+      return expect(_(getArguments()).instanceOf("Arguments")).toBeTruthy();
     });
-    return it('coffescript Class', function() {
+    return it("coffescript Class", function() {
       var Guten;
       Guten = (function() {
 
@@ -360,41 +367,41 @@ describe('Object', function() {
       return expect(_(new Guten).instanceOf(Guten)).toBeTruthy();
     });
   });
-  describe('#constructorName', function() {
-    it('Boolean', function() {
-      expect(_(true).constructorName()).toEqual('Boolean');
-      return expect(_(false).constructorName()).toEqual('Boolean');
+  describe("#constructorName", function() {
+    it("Boolean", function() {
+      expect(_(true).constructorName()).toEqual("Boolean");
+      return expect(_(false).constructorName()).toEqual("Boolean");
     });
-    it('Number', function() {
-      expect(_(1).constructorName()).toEqual('Number');
-      return expect(_(1.0).constructorName()).toEqual('Number');
+    it("Number", function() {
+      expect(_(1).constructorName()).toEqual("Number");
+      return expect(_(1.0).constructorName()).toEqual("Number");
     });
-    it('String', function() {
-      return expect(_('x').constructorName()).toEqual('String');
+    it("String", function() {
+      return expect(_("x").constructorName()).toEqual("String");
     });
-    it('Array', function() {
-      return expect(_([]).constructorName()).toEqual('Array');
+    it("Array", function() {
+      return expect(_([]).constructorName()).toEqual("Array");
     });
-    it('Object', function() {
-      return expect(_({}).constructorName()).toEqual('Object');
+    it("Object", function() {
+      return expect(_({}).constructorName()).toEqual("Object");
     });
-    it('Function', function() {
-      return expect(_(function() {}).constructorName()).toEqual('Function');
+    it("Function", function() {
+      return expect(_(function() {}).constructorName()).toEqual("Function");
     });
-    it('Date', function() {
-      return expect(_(new Date).constructorName()).toEqual('Date');
+    it("Date", function() {
+      return expect(_(new Date).constructorName()).toEqual("Date");
     });
-    it('RegExp', function() {
-      return expect(_(/(?:)/).constructorName()).toEqual('RegExp');
+    it("RegExp", function() {
+      return expect(_(/(?:)/).constructorName()).toEqual("RegExp");
     });
-    it('Arguments', function() {
+    it("Arguments", function() {
       var getArguments;
       getArguments = function() {
         return arguments;
       };
-      return expect(_(getArguments()).constructorName()).toEqual('Arguments');
+      return expect(_(getArguments()).constructorName()).toEqual("Arguments");
     });
-    return it('coffescript Class', function() {
+    return it("coffescript Class", function() {
       var Guten;
       Guten = (function() {
 
@@ -403,17 +410,17 @@ describe('Object', function() {
         return Guten;
 
       })();
-      return expect(_(new Guten).constructorName()).toEqual('Guten');
+      return expect(_(new Guten).constructorName()).toEqual("Guten");
     });
   });
-  describe('#isNaN', function() {
-    return it('works', function() {
+  describe("#isNaN", function() {
+    return it("works", function() {
       expect(_(NaN).isNaN()).toBeTruthy;
-      return expect(_('x').isNaN()).toBeFalsy;
+      return expect(_("x").isNaN()).toBeFalsy;
     });
   });
-  describe('#tap', function() {
-    return it('works', function() {
+  describe("#tap", function() {
+    return it("works", function() {
       var a, b, c;
       a = {
         a: 1
@@ -427,8 +434,8 @@ describe('Object', function() {
       return expect(b).toEqual([1]);
     });
   });
-  describe('#clone', function() {
-    return it('return a shallow clone', function() {
+  describe("#clone", function() {
+    return it("return a shallow clone", function() {
       var a;
       a = {
         a: 1
@@ -438,8 +445,8 @@ describe('Object', function() {
       });
     });
   });
-  return describe('#methods', function() {
-    return it('return all methods of the object', function() {
+  describe("#methods", function() {
+    return it("return all methods of the object", function() {
       var Guten, a;
       Guten = (function() {
 
@@ -453,27 +460,36 @@ describe('Object', function() {
 
       })();
       a = new Guten;
-      return expect(_(a).methods()).toEqual(['a']);
+      return expect(_(a).methods()).toEqual(["a"]);
+    });
+  });
+  return describe(".under_alias", function() {
+    return it("works", function() {
+      Object.prototype.test_foo = 1;
+      Object.prototype.test_bar = function() {};
+      _.under_alias(Object, "test_foo", "test_bar");
+      Object.prototype._test_foo.should === Object.prototype.test_foo;
+      return Object.prototype._test_bar.should === Object.prototype.test_bar;
     });
   });
 });
 
-describe('Enumerable', function() {
+describe("Enumerable", function() {
   var _a, _b;
   _a = [1, 2];
   _b = H({
     a: 1,
     b: 2
   });
-  describe('#_any', function() {
-    it('any one is true => true', function() {
+  describe("#_any", function() {
+    it("any one is true => true", function() {
       var ret;
       ret = _a._any(function(v) {
         return v === 1;
       });
       return expect(ret).toBeTruthy();
     });
-    return it('all false => false', function() {
+    return it("all false => false", function() {
       var ret;
       ret = _a._any(function(v) {
         return v === -1;
@@ -481,15 +497,15 @@ describe('Enumerable', function() {
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#_all', function() {
-    it('all true => true', function() {
+  describe("#_all", function() {
+    it("all true => true", function() {
       var ret;
       ret = _a._all(function(v) {
         return v === 1 || v === 2;
       });
       return expect(ret).toBeTruthy();
     });
-    return it('one false => false', function() {
+    return it("one false => false", function() {
       var ret;
       ret = _a._all(function(v) {
         return v === 1;
@@ -497,15 +513,15 @@ describe('Enumerable', function() {
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#_none', function() {
-    it('all false => true', function() {
+  describe("#_none", function() {
+    it("all false => true", function() {
       var ret;
       ret = _a._none(function(v) {
         return v === -1;
       });
       return expect(ret).toBeTruthy();
     });
-    return it('one true => false', function() {
+    return it("one true => false", function() {
       var ret;
       ret = _a._none(function(v) {
         return v === 1;
@@ -513,22 +529,22 @@ describe('Enumerable', function() {
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#_one', function() {
-    it('only one true => true', function() {
+  describe("#_one", function() {
+    it("only one true => true", function() {
       var ret;
       ret = _a._one(function(v) {
         return v === 1;
       });
       return expect(ret).toBeTruthy();
     });
-    it('more than two true => false', function() {
+    it("more than two true => false", function() {
       var ret;
       ret = _a._one(function(v) {
         return v === 1 || v === 2;
       });
       return expect(ret).toBeFalsy();
     });
-    return it('all false => false', function() {
+    return it("all false => false", function() {
       var ret;
       ret = _a._one(function(v) {
         return v === -1;
@@ -536,42 +552,42 @@ describe('Enumerable', function() {
       return expect(ret).toBeFalsy();
     });
   });
-  describe('#_map', function() {
-    return it('use native', function() {
+  describe("#_map", function() {
+    return it("use native", function() {
       var a, b, ret;
       a = [1, 2];
-      b = ['1', '2'];
+      b = ["1", "2"];
       ret = a._map(function(v) {
         return v.toString();
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#_find', function() {
-    it('find first value is true', function() {
+  describe("#_find", function() {
+    it("find first value is true", function() {
       var ret;
       ret = _a._find(function(v) {
         return v === 1;
       });
       return expect(ret).toEqual(1);
     });
-    it('retuns null if not found', function() {
+    it("retuns null if not found", function() {
       var ret;
       ret = _a._find(function(v) {
         return v === -1;
       });
       return expect(ret).toBeNull;
     });
-    return it('works for Hash', function() {
+    return it("works for Hash", function() {
       var ret;
       ret = _b._find(function(k, v) {
         return v === 1;
       });
-      return expect(ret).toEqual(['a', 1]);
+      return expect(ret).toEqual(["a", 1]);
     });
   });
-  describe('#_findAll', function() {
-    it('return all fined values', function() {
+  describe("#_findAll", function() {
+    it("return all fined values", function() {
       var a, b, ret;
       a = [1, 2, 1, 3, 4];
       b = [1, 1, 3];
@@ -580,7 +596,7 @@ describe('Enumerable', function() {
       });
       return expect(ret).toEqual(b);
     });
-    return it('works for Hash', function() {
+    return it("works for Hash", function() {
       var a, b, ret;
       a = H({
         a: 1,
@@ -589,15 +605,15 @@ describe('Enumerable', function() {
         d: 3,
         e: 4
       });
-      b = [['a', 1], ['c', 1], ['d', 3]];
+      b = [["a", 1], ["c", 1], ["d", 3]];
       ret = a._findAll(function(k, v) {
         return v === 1 || v === 3;
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#_reject', function() {
-    it('return all expect rejected values', function() {
+  describe("#_reject", function() {
+    it("return all expect rejected values", function() {
       var a, b, ret;
       a = [1, 2, 1, 3, 4];
       b = [2, 4];
@@ -606,7 +622,7 @@ describe('Enumerable', function() {
       });
       return expect(ret).toEqual(b);
     });
-    return it('works for Hash', function() {
+    return it("works for Hash", function() {
       var a, b, ret;
       a = H({
         a: 1,
@@ -615,15 +631,15 @@ describe('Enumerable', function() {
         d: 3,
         e: 4
       });
-      b = [['b', 2], ['e', 4]];
+      b = [["b", 2], ["e", 4]];
       ret = a._reject(function(k, v) {
         return v === 1 || v === 3;
       });
       return expect(ret).toEqual(b);
     });
   });
-  describe('#_inject', function() {
-    it('with initial value', function() {
+  describe("#_inject", function() {
+    it("with initial value", function() {
       var a, b, ret;
       a = [1, 2, 3];
       b = 6;
@@ -632,7 +648,7 @@ describe('Enumerable', function() {
       });
       return expect(ret).toEqual(b);
     });
-    return it('without initial value', function() {
+    return it("without initial value", function() {
       var a, b, ret;
       a = [1, 2, 3];
       b = 6;
@@ -642,18 +658,18 @@ describe('Enumerable', function() {
       return expect(ret).toEqual(b);
     });
   });
-  describe('#_max', function() {
-    return it('call without argument', function() {
+  describe("#_max", function() {
+    return it("call without argument", function() {
       return expect(_a._max()).toEqual(2);
     });
   });
-  describe('#_min', function() {
-    return it('call without arguments', function() {
+  describe("#_min", function() {
+    return it("call without arguments", function() {
       return expect(_a._min()).toEqual(1);
     });
   });
-  describe('#_shuffle', function() {
-    return it('works', function() {
+  describe("#_shuffle", function() {
+    return it("works", function() {
       var i, numbers;
       numbers = (function() {
         var _results;
@@ -666,8 +682,8 @@ describe('Enumerable', function() {
       return expect(numbers._shuffle()).not.toEqual(numbers);
     });
   });
-  describe('#_sortBy', function() {
-    return it('works', function() {
+  describe("#_sortBy", function() {
+    return it("works", function() {
       var a, b, ret;
       a = [[1, 9], [2, 8]];
       b = [[2, 8], [1, 9]];
@@ -677,8 +693,8 @@ describe('Enumerable', function() {
       return expect(ret).toEqual(b);
     });
   });
-  return describe('#_groupBy', function() {
-    it('works', function() {
+  describe("#_groupBy", function() {
+    it("works", function() {
       var a, b, ret;
       a = [1, 2, 3, 4];
       b = H({
@@ -687,14 +703,14 @@ describe('Enumerable', function() {
       });
       ret = a._groupBy(function(v) {
         if (v === 1 || v === 3) {
-          return 'a';
+          return "a";
         } else {
-          return 'b';
+          return "b";
         }
       });
       return expect(ret).toEqual(b);
     });
-    return it('with Hash', function() {
+    return it("with Hash", function() {
       var a, b, ret;
       a = H({
         a: 1,
@@ -703,17 +719,55 @@ describe('Enumerable', function() {
         d: 4
       });
       b = H({
-        a: [['a', 1], ['c', 3]],
-        b: [['b', 2], ['d', 4]]
+        a: [["a", 1], ["c", 3]],
+        b: [["b", 2], ["d", 4]]
       });
       ret = a._groupBy(function(k, v) {
         if (v === 1 || v === 3) {
-          return 'a';
+          return "a";
         } else {
-          return 'b';
+          return "b";
         }
       });
       return expect(ret).toEqual(b);
+    });
+  });
+  describe("#_eachSlice", function() {
+    return it("works", function() {
+      var a, b;
+      a = [];
+      b = [[1, 2], [3]];
+      [1, 2, 3]._eachSlice(2, function(data) {
+        return a.push(data);
+      });
+      return expect(a).toEqual(b);
+    });
+  });
+  return describe("#_eachCons", function() {
+    it("works", function() {
+      var a, b;
+      a = [];
+      b = [[1, 2], [2, 3]];
+      [1, 2, 3]._eachCons(2, function(data) {
+        return a.push(data);
+      });
+      return expect(a).toEqual(b);
+    });
+    it("n=0", function() {
+      var a;
+      a = [];
+      [1, 2, 3]._eachCons(0, function(data) {
+        return a.push(data);
+      });
+      return expect(a).toEqual(a);
+    });
+    return it("n > data.length", function() {
+      var a;
+      a = [];
+      [1, 2, 3]._eachCons(10, function(data) {
+        return a.push(data);
+      });
+      return expect(a).toEqual(a);
     });
   });
 });
@@ -878,21 +932,21 @@ describe('Math', function() {
   });
 });
 
-describe('Number', function() {
-  describe('._max', function() {
-    return it('get the largest value', function() {
+describe("Number", function() {
+  describe("._max", function() {
+    return it("get the largest value", function() {
       expect(Number._max(1, 2)).toEqual(2);
       return expect(Number._max(2, 1)).toEqual(2);
     });
   });
-  describe('._min', function() {
-    return it('get the minium value', function() {
+  describe("._min", function() {
+    return it("get the minium value", function() {
       expect(Number._min(1, 2)).toEqual(1);
       return expect(Number._min(2, 1)).toEqual(1);
     });
   });
-  return describe('#_times', function() {
-    return it('works', function() {
+  describe("#_times", function() {
+    it("works", function() {
       var a, b;
       a = [];
       b = [0, 1, 2];
@@ -900,6 +954,30 @@ describe('Number', function() {
         return a.push(i);
       });
       return expect(a).toEqual(b);
+    });
+    return it("starts with 1", function() {
+      var a, b;
+      a = [];
+      b = [1, 2, 3];
+      3.._times(1, function(i) {
+        return a.push(i);
+      });
+      return expect(a).toEqual(b);
+    });
+  });
+  describe("#_div", function() {
+    return it("returns the largest integer less than or equal to a number", function() {
+      return 1.._div(2).should === 0;
+    });
+  });
+  describe("#_fdiv", function() {
+    return it("do float division", function() {
+      return 1.._fdiv(2).should === 0.5;
+    });
+  });
+  return describe("#_toInteger", function() {
+    return it("returns the largest integer less than or equal to a number", function() {
+      return 0.5._toInteger().should === 0;
     });
   });
 });

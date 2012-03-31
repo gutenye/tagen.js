@@ -173,5 +173,24 @@ _.reopen Array,
       return i if (this[i] == item) 
     return -1
 
+  # [ [1,2], [3,4] ] => [ [1,3], [2,4] ]
+  _transpose: ->
+    w = @length
+    h = if @[0] instanceof Array then @[0].length else 0
+    return []  if h == 0 || w == 0
+
+    ret = []
+    i = 0
+    while i < h
+      ret[i] = []
+      j = 0
+      while j < w
+        ret[i][j] = @[j][i]
+        j++
+      i++
+
+    ret
+
 # alias
 Array::_contains = Array::_isInclude
+_.under_alias Array, [ "push", "pop", "concat", "slice", "sort", "reverse", "join", "splice" ]

@@ -150,7 +150,29 @@ Enumerable =
       key = iterator(args...)
       value = if _(@).instanceOf(Hash) then [args[0], args[1]] else args[0]
       ret._fetch_or_store(key, []).push(value)
-    return ret
+
+    ret
+
+  _eachSlice: (n, callback) ->
+    return [] if n==0
+
+    parts = @length._div(n)+1
+    end = 0
+
+    parts._times 1, (i)=>
+      [start, end] = [end, n*i]
+      callback.call(this, @[start...end])
+
+  _eachCons: (n, callback) ->
+    return [] if n==0
+    start = 0
+
+    loop
+      data = @[start...start+n]
+      break if data.length < n
+
+      callback.call(this, data)
+      start += 1
 
 root['Enumerable'] = Enumerable
 Enumerable._collect = Enumerable._map

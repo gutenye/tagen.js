@@ -175,5 +175,11 @@ class Wrapper
       names.push(k) if _(v).instanceOf(Function)
     return names.sort()
 
+# alias #foo to #_foo
+_.under_alias = (klass, names...) ->
+  for name in names
+    under_name = "_#{name}"
+    klass.prototype[under_name] = klass.prototype[name]
+
 # Expose `wrapper.prototype` as `_.prototype`
 _.prototype = Wrapper.prototype

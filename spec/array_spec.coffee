@@ -142,3 +142,10 @@ describe "Array", ->
       b = [ "1", "2" ]
 
       expect(a._invoke("toString")).toEqual b
+
+  describe "#_transpose", ->
+    it "transposes an array", ->
+      a = [ [1,2], [3,4] ]
+      b = [ [1,3], [2,4] ]
+
+      expect(a._transpose()).toEqual b

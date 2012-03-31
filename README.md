@@ -1,6 +1,13 @@
 tagenjs, bring Ruby into Javascript world.
 ===================================
 
+| Homepage:      |  https://github.com/GutenYe/tagenjs       |
+|----------------|------------------------------------------------------       |
+| Author:	       | Guten                                                 |
+| License:       | MIT-LICENSE                                                |
+| Issue Tracker: | https://github.com/GutenYe/tagenjs/issues |
+
+
 Features
 --------
 
@@ -8,7 +15,7 @@ Features
 * Extend Javascript prototype without confict. e.g. `#_<method>`
 * Based on underscore.
 
-How to Use
+Getting Started
 ----------
 
 	arr = [1, 2]
@@ -60,35 +67,28 @@ see source code.
 INSTALL
 -------
 
-with bpm
-
-	$ bpm add tagen
-
 with rails 3.1
 
-	$ gem install tagenjs
+	# Gemfile
+		gem "tagenjs"
+
 	# app/assets/javascripts/application.js
 		//= require 'tagenjs'
-
-NOTE
-----
-
-for sroutcore, need load 'tagen' before 'sproutcore'
 
 Resources
 ---------
 
-* [ruby](https://github.com/ruby/ruby) The Ruby Programming Language 
-* [coffee-script](https://github.com/jashkenas/coffee-script) Unfancy JavaScript
-* [bpm](https://github.com/bpm/bpm) a system for managing resource dependencies for client-side browser applications
-
+* [ruby](http://www.ruby-lang.org/en): A Programmer's Best Friend.
+* [coffee-script](http://coffeescript.org/): Unfancy JavaScript.
+* [rake-pipeline](https://github.com/livingsocial/rake-pipeline): this project build by rake-pipeline.
+* [underscore](http://underscorejs.org/) a utility-belt library.
 
 Copyright
 ---------
 
 (the MIT License)
 
-Copyright (c) 2011 Guten
+Copyright (c) 2011-2012 Guten
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
