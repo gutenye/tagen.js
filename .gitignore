@@ -2,3 +2,4 @@
 /.bpm
 *.bpkg
 *.gem
+/tmp

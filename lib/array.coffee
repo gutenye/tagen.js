@@ -16,7 +16,7 @@ _.reopen Array,
   # support break by `throw BREAKER`
   #
   # callback(value, index, self)
-  each: (iterator) ->
+  _each: (iterator) ->
     return new Enumerator(this) unless iterator
 
     try
@@ -25,7 +25,7 @@ _.reopen Array,
     catch err
       throw err if err != BREAKER
 
-  isEqual: (ary) ->
+  _isEqual: (ary) ->
     return false if @length != ary.length
     for v, i in this
       if _(v).instanceOf(Array) 
@@ -35,23 +35,23 @@ _.reopen Array,
     return true
 
   # alias contains
-  isInclude: (obj) ->
+  _isInclude: (obj) ->
     @indexOf(obj) != -1
 
-  isEmpty: ->
+  _isEmpty: ->
     @length == 0
 
   # shadow-clone
-  clone: ()->
+  _clone: ()->
     @slice()
 
-  random: ->
+  _random: ->
     i = Math.random() * @length
     this[Math.floor(i)]
 
   # Zip together multiple lists into a single array -- elements that share
   # an index go together.
-  zip: (args...) ->
+  _zip: (args...) ->
     args = [ this, args...]
     length = args.pluck('length').max()
     ret = new Array(length)
@@ -64,7 +64,7 @@ _.reopen Array,
   #
   # first() => value
   # first(n) => Array
-  first: (n) ->
+  _first: (n) ->
     if n then @slice(0, n) else this[0]
 
   # Get the last element of an array. Passing **n** will return the last N
@@ -72,18 +72,18 @@ _.reopen Array,
   #
   # last() => value
   # last(n) => Array
-  last: (n)  ->
+  _last: (n)  ->
     if n then @slice(@length-n) else this[@length-1]
 
   # Trim out all null values from an array.
-  compact: () ->
+  _compact: () ->
     @findAll (value) -> 
       value != null
 
   # Return a completely flattened version of an array.
   #
   # flatten(shallow=false)
-  flatten: (shallow) -> 
+  _flatten: (shallow) -> 
     ret = []
     @each (v) ->
       if _(v).instanceOf(Array)
@@ -98,7 +98,7 @@ _.reopen Array,
   # been sorted, you have the option of using a faster algorithm.
   #
   # uniq(isSorted=false)
-  uniq: (isSorted) ->
+  _uniq: (isSorted) ->
     ret = []
 
     @each (v, i) ->
@@ -109,12 +109,12 @@ _.reopen Array,
     return ret
 
   # Return a version of the array that does not contain the specified value(s).
-  without: (args...) ->
+  _without: (args...) ->
     @findAll (value) -> !args.isInclude(value)
 
   # data like [ {a: 1}, {a: 2} .. ]
   #
-  pluck: (key) ->
+  _pluck: (key) ->
     @map (data) ->
       data[key]
 
@@ -122,7 +122,7 @@ _.reopen Array,
   # findIndex(fn[v]=>bool)
   #
   # => -1
-  findIndex: (obj) ->
+  _findIndex: (obj) ->
     switch _(obj).constructorName()
       when 'Function'
         iterator = obj
@@ -140,7 +140,7 @@ _.reopen Array,
 
   # Invoke a method (with arguments) on every item in a collection.
   # => null if no method
-  invoke: (methodName, args...) ->
+  _invoke: (methodName, args...) ->
     @map (value) ->
       method = value[methodName]
       if method 
@@ -154,7 +154,7 @@ _.reopen Array,
   # Delegates to **ECMAScript 5**'s native `indexOf` if available.
   # If the array is large and already in sort order, pass `true`
   # for **isSorted** to use binary search.
-  indexOf: Array::indexOf || (item, isSorted) ->
+  _indexOf: Array::indexOf || (item, isSorted) ->
     return -1 if (this == null) 
 
     if isSorted
@@ -166,7 +166,7 @@ _.reopen Array,
     return -1
 
   # Delegates to **ECMAScript 5**'s native `lastIndexOf` if available.
-  lastIndexOf: Array::lastIndexOf || (item) ->
+  _lastIndexOf: Array::lastIndexOf || (item) ->
     return -1 if (this == null) 
     i = @length
     while (i--) 
@@ -174,4 +174,4 @@ _.reopen Array,
     return -1
 
 # alias
-Array::contains = Array::isInclude
+Array::_contains = Array::_isInclude

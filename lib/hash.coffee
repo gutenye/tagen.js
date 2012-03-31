@@ -7,21 +7,21 @@ class Hash extends Object
         @data[k] = v
 
   # callback(k, v, self)
-  each: (iterator)->
+  _each: (iterator)->
     try
       for own k, v of @data
         iterator(k, v, @data)
     catch err
       throw err if err != BREAKER
 
-  isEmpty: ->
+  _isEmpty: ->
     for own k, v of @data
       return false
 
-  keys: ->
+  _keys: ->
     Object.keys(@data)
 
-  values: ->
+  _values: ->
     ret = []
     for k in @keys()
       ret.push @data[k]
@@ -29,34 +29,34 @@ class Hash extends Object
     ret
 
   # default is null
-  fetch: (k, defaultValue) ->
+  _fetch: (k, defaultValue) ->
     defaultValue = if defaultValue == undefined then null else defaultValue
     ret = @data[k]
     if ret == undefined then defaultValue else ret
 
-  store: (k, v) ->
+  _store: (k, v) ->
     @data[k] = v
 
-  fetch_or_store: (k, v) ->
+  _fetch_or_store: (k, v) ->
     @data[k] ?= v
     @data[k]
 
-  toHash: ->
+  _toHash: ->
     this
 
-  toObject: ->
+  _toObject: ->
     new Object(@data)
 
-  keys: () -> 
+  _keys: () -> 
     keys = []
     @each (k) ->
       keys.push k
     return keys
 
-  values: ()->
+  _values: ()->
     @map (k,v)-> v
 
-  hasKey: (key)->
+  _hasKey: (key)->
     ret = false
     @each (k) ->
       if k == key
@@ -64,7 +64,7 @@ class Hash extends Object
         throw BREAKER
     ret
 
-  hasValue: (value)->
+  _hasValue: (value)->
     ret = false
     @each (k,v) ->
       if v == value
@@ -74,9 +74,9 @@ class Hash extends Object
 
 
 # alias
-Hash::get = Hash::fetch
-Hash::set = Hash::store
-Hash::get_or_set = Hash::fetch_or_store
+Hash::_get = Hash::_fetch
+Hash::_set = Hash::_store
+Hash::_get_or_set = Hash::_fetch_or_store
 
 _.mixin Hash, Enumerable
 

@@ -1,0 +1,32 @@
+require "pd"
+require "rake-pipeline-web-filters"
+require "./filters"
+
+output "dist"
+
+input "lib" do
+  output "tmp/lib"
+
+  match "*.coffee" do
+    coffee_script :bare => true
+  end
+end
+
+input "tmp/lib" do
+  match "main.js" do
+    neuter("tagen.js")
+  end
+end
+
+input "spec" do
+  output "tests"
+
+  match "*.coffee" do
+    coffee_script :bare => true
+
+    concat "tagen-tests.js"
+  end
+end
+
+
+# vim: ft=ruby

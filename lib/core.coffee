@@ -1,4 +1,5 @@
 _ = (obj) -> new Wrapper(obj)
+
 _.VERSION = '0.0.1'
 BREAKER = new Error('BREAKER')
 root = this.root = this

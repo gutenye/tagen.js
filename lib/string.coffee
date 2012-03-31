@@ -1,20 +1,20 @@
 _.reopen String,
-  toInteger: ->
+  _toInteger: ->
     parseInt(this)
 
-  pluralize: ->
+  _pluralize: ->
     "#{this}s"
 
-  capitalize: ->
+  _capitalize: ->
     @charAt(0).toUpperCase() + @slice(1)
 
-  chop: ->
+  _chop: ->
     if @length == 0 then  "" else @substring(0, @length-1)
 
-  endsWith: (str) ->
+  _endsWith: (str) ->
     @length-str.length == @lastIndexOf(str)
 
-  reverse: ->
+  _reverse: ->
     s = ""
     i = @length
     while i > 0 
@@ -23,5 +23,5 @@ _.reopen String,
 
     s
 
-  isEmpty: ->
+  _isEmpty: ->
     @length == 0

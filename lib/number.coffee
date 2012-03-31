@@ -1,8 +1,8 @@
 _.reopenClass Number,
-  max: (a, b) -> 
+  _max: (a, b) -> 
     if a < b then b else a
 
-  min: (a, b)  ->
+  _min: (a, b)  ->
     if a > b then b else a
 
 _.reopen Number,
@@ -10,6 +10,6 @@ _.reopen Number,
   #   # ..
   #
   # callback(i)
-  times: (fn)->
+  _times: (fn)->
     for i in [0...this]
       fn(i)

@@ -142,6 +142,3 @@ describe 'Array', ->
       b = [ '1', '2' ]
 
       expect(a.invoke('toString')).toEqual b
-
-    
-

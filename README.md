@@ -1,4 +1,4 @@
-tagenjs, Javascript in Ruby way
+tagenjs, connect Javascript and Ruby
 ===================================
 
 Features
@@ -6,14 +6,20 @@ Features
 
 * Ruby compability. e.g. `Enumerable`, `Enumerator`, `each`, `map` ... # write codeing between Ruby and Javascript
 * Javascript Name Convention. e.g. `#empty?` -> `isEmpty`, `find_all` -> `FindAll`
-* Best used with CoffeeScript. 
+* based on underscore
 
 Overview
 -------
 
+extend to property.
+
+	arr = [1, 2]
+	arr._isEmpty() #=> false
+
+
 for Object,  use `_(x).constructorName()`
 
-others are exnted prorotype, so `[].isEmpty()`
+others are extend prorotype, so `[].isEmpty()`
 
 and don't use Object for data directly, use Hash instead, `H(a: 1).isEmpty()`
 
