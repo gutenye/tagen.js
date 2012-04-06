@@ -175,12 +175,20 @@ describe("Array", function() {
       return expect(a._invoke("toString")).toEqual(b);
     });
   });
-  return describe("#_transpose", function() {
+  describe("#_transpose", function() {
     return it("transposes an array", function() {
       var a, b;
       a = [[1, 2], [3, 4]];
       b = [[1, 3], [2, 4]];
       return expect(a._transpose()).toEqual(b);
+    });
+  });
+  return describe("_x", function() {
+    return it("works", function() {
+      var a;
+      a = [];
+      a._push(1);
+      return expect(a).toEqual([1]);
     });
   });
 });
@@ -656,6 +664,24 @@ describe("Enumerable", function() {
         return memo + v;
       });
       return expect(ret).toEqual(b);
+    });
+  });
+  describe("#_sum", function() {
+    it("works", function() {
+      return [1, 2, 3]._sum.should === 6;
+    });
+    it("with initial value", function() {
+      return [1, 2, 3]._sum(1).should === 7;
+    });
+    it("with callback", function() {
+      return [1, 2, 3]._sum(function(v) {
+        return 1;
+      }).should === 3;
+    });
+    return it("with initial value and callback", function() {
+      return [1, 2, 3]._sum(1, function(v) {
+        return 1;
+      }).should === 4;
     });
   });
   describe("#_max", function() {

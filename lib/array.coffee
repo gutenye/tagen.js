@@ -193,4 +193,4 @@ _.reopen Array,
 
 # alias
 Array::_contains = Array::_isInclude
-_.under_alias Array, [ "push", "pop", "concat", "slice", "sort", "reverse", "join", "splice" ]
+_.under_alias Array, "push", "pop", "concat", "slice", "sort", "reverse", "join", "splice"

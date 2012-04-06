@@ -69,7 +69,7 @@ Enumerable =
   # inject(iterator)
   # inject(initial, iterator)
   #
-  #  callback{|memo, args...| => memo}
+  #  callback{|memo, value| => memo}
   #
   # ONLY Array-like
   #
@@ -82,17 +82,43 @@ Enumerable =
         initial = args[0]
         iterator = args[1]
       else
-        throw 'wrong argument'
+        throw "Enumerable#_inject: wrong argument -- #{args}"
 
     memo = initial
-    @_each (args...) ->
+    @_each (value) ->
       if initial == null
-        memo = args[0]
+        memo = value
         initial = true
       else
-        memo = iterator(memo, args...)
+        memo = iterator(memo, value)
+
+
 
     memo
+
+  # sum(initial=0[, callback])
+  # sum(callback)
+  #
+  #  callback{|value| => number}
+  #
+  # ONLY Array-like
+  _sum: (args...)->
+    switch args.length
+      when 1
+        if typeof(args[0]) ==  "function"
+          initial = 0
+          callback = args[0]
+        else
+          initial = args[0]
+          callback = (v) -> v
+      when 2
+        initial = args[0]
+        callback = args[1]
+      else
+        throw "Enumerable#_sum: wrong argument -- #{args}"
+
+    @_inject initial, (memo, v)->
+      memo + callback.call(this, v)
 
   # Return the maximum element or (element-based computation).
   # ruby: max
@@ -129,7 +155,7 @@ Enumerable =
         shuffled[rand] = value
     return shuffled
 
-  # Sort the object's values by a criterion produced by an iterator.
+  # Sort the object"s values by a criterion produced by an iterator.
   # ONLY Array
   _sortBy: (iterator) ->
     ret = (@_map (args...) ->
@@ -139,9 +165,9 @@ Enumerable =
       if a < b then -1 else if a > b then 1 else 0
     )
 
-    ret._pluck('value')
+    ret._pluck("value")
 
-  # Groups the object's values by a criterion. Pass either a string attribute
+  # Groups the object"s values by a criterion. Pass either a string attribute
   # to group by, or a function that returns the criterion.
   # @return [Hash]
   _groupBy: (iterator) ->
@@ -174,6 +200,6 @@ Enumerable =
       callback.call(this, data)
       start += 1
 
-root['Enumerable'] = Enumerable
+root["Enumerable"] = Enumerable
 Enumerable._collect = Enumerable._map
 Enumerable._detect = Enumerable._find

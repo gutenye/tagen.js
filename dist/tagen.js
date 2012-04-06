@@ -211,6 +211,18 @@ Wrapper = (function() {
 
 })();
 
+_.under_alias = function() {
+  var klass, name, names, under_name, _i, _len, _results;
+  klass = arguments[0], names = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+  _results = [];
+  for (_i = 0, _len = names.length; _i < _len; _i++) {
+    name = names[_i];
+    under_name = "_" + name;
+    _results.push(klass.prototype[under_name] = klass.prototype[name]);
+  }
+  return _results;
+};
+
 _.prototype = Wrapper.prototype;
 
 })();
@@ -339,30 +351,54 @@ Enumerable = {
         iterator = args[1];
         break;
       default:
-        throw 'wrong argument';
+        throw "Enumerable#_inject: wrong argument -- " + args;
     }
     memo = initial;
-    this._each(function() {
-      var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    this._each(function(value) {
       if (initial === null) {
-        memo = args[0];
+        memo = value;
         return initial = true;
       } else {
-        return memo = iterator.apply(null, [memo].concat(__slice.call(args)));
+        return memo = iterator(memo, value);
       }
     });
     return memo;
   },
+  _sum: function() {
+    var args, callback, initial;
+    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    switch (args.length) {
+      case 1:
+        if (typeof args[0] === "function") {
+          initial = 0;
+          callback = args[0];
+        } else {
+          initial = args[0];
+          callback = function(v) {
+            return v;
+          };
+        }
+        break;
+      case 2:
+        initial = args[0];
+        callback = args[1];
+        break;
+      default:
+        throw "Enumerable#_sum: wrong argument -- " + args;
+    }
+    return this._inject(initial, function(memo, v) {
+      return memo + callback.call(this, v);
+    });
+  },
   _max: function() {
-    if (this.isEmpty()) {
+    if (this._isEmpty()) {
       return null;
     } else if (_(this).instanceOf(Array)) {
       return Math.max.apply(Math, this);
     }
   },
   _min: function(iterator) {
-    if (this.isEmpty()) {
+    if (this._isEmpty()) {
       return null;
     } else if (_(this).instanceOf(Array)) {
       return Math.min.apply(Math, this);
@@ -402,7 +438,7 @@ Enumerable = {
         return 0;
       }
     });
-    return ret.pluck('value');
+    return ret._pluck("value");
   },
   _groupBy: function(iterator) {
     var ret,
@@ -413,13 +449,38 @@ Enumerable = {
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       key = iterator.apply(null, args);
       value = _(_this).instanceOf(Hash) ? [args[0], args[1]] : args[0];
-      return ret.fetch_or_store(key, []).push(value);
+      return ret._fetch_or_store(key, []).push(value);
     });
     return ret;
+  },
+  _eachSlice: function(n, callback) {
+    var end, parts,
+      _this = this;
+    if (n === 0) return [];
+    parts = this.length._div(n) + 1;
+    end = 0;
+    return parts._times(1, function(i) {
+      var start, _ref;
+      _ref = [end, n * i], start = _ref[0], end = _ref[1];
+      return callback.call(_this, _this.slice(start, end));
+    });
+  },
+  _eachCons: function(n, callback) {
+    var data, start, _results;
+    if (n === 0) return [];
+    start = 0;
+    _results = [];
+    while (true) {
+      data = this.slice(start, (start + n));
+      if (data.length < n) break;
+      callback.call(this, data);
+      _results.push(start += 1);
+    }
+    return _results;
   }
 };
 
-root['Enumerable'] = Enumerable;
+root["Enumerable"] = Enumerable;
 
 Enumerable._collect = Enumerable._map;
 
@@ -638,7 +699,7 @@ _.reopen(Array, {
     var args, i, length, ret;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     args = [this].concat(__slice.call(args));
-    length = args._pluck('length').max();
+    length = args._pluck('length')._max();
     ret = new Array(length);
     for (i = 0; 0 <= length ? i < length : i > length; 0 <= length ? i++ : i--) {
       ret[i] = args._pluck("" + i);
@@ -669,7 +730,7 @@ _.reopen(Array, {
     ret = [];
     this._each(function(v) {
       if (_(v).instanceOf(Array)) {
-        v = shallow ? v : v.flatten();
+        v = shallow ? v : v._flatten();
         return ret = ret.concat(v);
       } else {
         return ret.push(v);
@@ -681,7 +742,7 @@ _.reopen(Array, {
     var ret;
     ret = [];
     this._each(function(v, i) {
-      if (0 === i || (isSorted === true ? ret.last() !== v : !ret.isInclude(v))) {
+      if (0 === i || (isSorted === true ? ret._last() !== v : !ret._isInclude(v))) {
         ret.push(v);
       }
       return ret;
@@ -692,7 +753,7 @@ _.reopen(Array, {
     var args;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     return this._findAll(function(value) {
-      return !args.isInclude(value);
+      return !args._isInclude(value);
     });
   },
   _pluck: function(key) {
@@ -758,10 +819,30 @@ _.reopen(Array, {
       if (this[i] === item) return i;
     }
     return -1;
+  },
+  _transpose: function() {
+    var h, i, j, ret, w;
+    w = this.length;
+    h = this[0] instanceof Array ? this[0].length : 0;
+    if (h === 0 || w === 0) return [];
+    ret = [];
+    i = 0;
+    while (i < h) {
+      ret[i] = [];
+      j = 0;
+      while (j < w) {
+        ret[i][j] = this[j][i];
+        j++;
+      }
+      i++;
+    }
+    return ret;
   }
 });
 
 Array.prototype._contains = Array.prototype._isInclude;
+
+_.under_alias(Array, "push", "pop", "concat", "slice", "sort", "reverse", "join", "splice");
 
 })();
 
@@ -776,7 +857,7 @@ Enumerator = (function() {
   }
 
   Enumerator.prototype._with_object = function(memo, iterator) {
-    this.data.each(function() {
+    this.data._each(function() {
       var args;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return iterator.apply(null, [memo].concat(__slice.call(args)));
@@ -787,7 +868,7 @@ Enumerator = (function() {
   Enumerator.prototype._each = function() {
     var args, _ref;
     args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-    return (_ref = this.data).each.apply(_ref, args);
+    return (_ref = this.data)._each.apply(_ref, args);
   };
 
   return Enumerator;
@@ -855,6 +936,7 @@ _.reopenClass(Math, {
 })();
 
 (function() {
+var __slice = Array.prototype.slice;
 
 _.reopenClass(Number, {
   _max: function(a, b) {
@@ -874,13 +956,30 @@ _.reopenClass(Number, {
 });
 
 _.reopen(Number, {
-  _times: function(fn) {
-    var i, _results;
+  _times: function() {
+    var args, callback, i, start, _ref, _results;
+    args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    switch (args.length) {
+      case 2:
+        start = args[0], callback = args[1];
+        break;
+      case 1:
+        _ref = [0, args[0]], start = _ref[0], callback = _ref[1];
+    }
     _results = [];
     for (i = 0; 0 <= this ? i < this : i > this; 0 <= this ? i++ : i--) {
-      _results.push(fn(i));
+      _results.push(callback.call(this, start + i));
     }
     return _results;
+  },
+  _toInteger: function() {
+    return Math.floor(this);
+  },
+  _div: function(n) {
+    return (this / n)._toInteger();
+  },
+  _fdiv: function(n) {
+    return this / n;
   }
 });
 

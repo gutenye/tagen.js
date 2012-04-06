@@ -146,6 +146,19 @@ describe "Enumerable", ->
 
       expect(ret).toEqual b
 
+  describe "#_sum", ->
+    it "works", ->
+      [1,2,3]._sum.should == 6
+
+    it "with initial value", ->
+      [1,2,3]._sum(1).should == 7
+
+    it "with callback", ->
+      [1,2,3]._sum((v)->1).should == 3
+            
+    it "with initial value and callback", ->
+      [1,2,3]._sum(1, (v)->1).should == 4
+
   describe "#_max", ->
     it "call without argument", ->
       expect(_a._max()).toEqual 2
