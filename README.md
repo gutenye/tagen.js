@@ -13,7 +13,7 @@ Features
 
 * Ruby compability. let's write javascript as easy as Ruby.
 * Extend Javascript prototype without confict. e.g. `#_<method>`
-* Based on underscore.
+* Inspried by underscore.
 
 Getting Started
 ----------

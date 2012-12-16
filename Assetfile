@@ -15,7 +15,7 @@ end
 # tagen.js 
 input "tmp/lib" do
   match "main.js" do
-    neuter("tagen.js")
+    neuter "tagen.js"
   end
 end
 

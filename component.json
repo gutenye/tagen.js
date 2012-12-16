@@ -1,0 +1,5 @@
+{
+	"name": "tagen",
+	"version": "1.0.0",
+	"main": "./dist/tagen.js"
+}
